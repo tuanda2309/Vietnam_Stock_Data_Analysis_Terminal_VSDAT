@@ -25,6 +25,7 @@ CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 DEVELOPER_EMAIL = os.environ.get('DEVELOPER_EMAIL', 'doananhtuan77qn@gmail.com')
 DEVELOPER_PHONE = os.environ.get('DEVELOPER_PHONE', '0399848871')
 DEVELOPER_GITHUB = os.environ.get('DEVELOPER_GITHUB', 'https://github.com/tuanda2309')
+DEVELOPER_WEB = os.environ.get('DEVELOPER_WEB', 'https://vsdat-frontend.onrender.com')
 
 def calculate_rsi(series, period=14):
     delta = series.diff()
@@ -227,15 +228,21 @@ def export_excel(symbol, start_date, end_date):
         inline_normal = InlineFont(rFont='Arial', sz=8, b=False)
         inline_link = InlineFont(rFont='Arial', sz=8, b=False, u='single', color=Color(rgb='0000FF'))
 
+        # Thiết lập khối thông tin nhà phát triển (Dòng 1 đến Dòng 4)
         ws['A1'] = CellRichText([TextBlock(inline_bold, 'Email: '), TextBlock(inline_normal, DEVELOPER_EMAIL)])
         ws['A2'] = CellRichText([TextBlock(inline_bold, 'Phone: '), TextBlock(inline_normal, DEVELOPER_PHONE)])
-        ws['A3'] = CellRichText([TextBlock(inline_bold, 'GitHub: '), TextBlock(inline_link, 'Tại đây')])
         
+        ws['A3'] = CellRichText([TextBlock(inline_bold, 'GitHub: '), TextBlock(inline_link, 'Tại đây')])
         ws['A3'].hyperlink = DEVELOPER_GITHUB
         ws['A3'].style = 'Hyperlink'
 
+        ws['A4'] = CellRichText([TextBlock(inline_bold, 'Web: '), TextBlock(inline_link, 'Tại đây')])  
+        ws['A4'].hyperlink = DEVELOPER_WEB                                                          
+        ws['A4'].style = 'Hyperlink'                                                                
+
+        # Cấu hình vị trí hàng tiêu đề chính (Dời từ dòng 4 xuống dòng 5)
         headers = ['NGÀY', 'GIÁ MỞ CỬA', 'GIÁ CAO NHẤT', 'GIÁ THẤP NHẤT', 'GIÁ ĐÓNG CỬA', 'THAY ĐỔI GIÁ', '% THAY ĐỔI', 'KHỐI LƯỢNG']
-        header_row = 4
+        header_row = 5
 
         for col_num, header in enumerate(headers, 1):
             cell = ws.cell(row=header_row, column=col_num)
@@ -244,7 +251,8 @@ def export_excel(symbol, start_date, end_date):
             cell.font = header_font
             cell.alignment = center
 
-        data_start_row = 5
+        # Ghi mảng dữ liệu lịch sử (Dời chỉ mục bắt đầu từ dòng 5 xuống dòng 6)
+        data_start_row = 6
         for row_num, (_, row) in enumerate(df.iterrows(), data_start_row):
             values = [
                 row['time'].strftime('%d/%m/%Y'),
