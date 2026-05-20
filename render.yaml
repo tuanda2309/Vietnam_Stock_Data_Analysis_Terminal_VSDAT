@@ -14,10 +14,9 @@ services:
   # 2. Cấu hình Trang Web Frontend (React Vite)
   - type: web
     name: vsdat-frontend
-    env: node
-    static: true
+    env: static
     buildCommand: "npm install && npm run build"
-    publishPath: dist
+    publishDir: dist
     rootDir: frontend
     plan: free
     envVars:
