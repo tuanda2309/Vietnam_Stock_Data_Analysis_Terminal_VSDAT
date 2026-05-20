@@ -1,7 +1,8 @@
-flask
-flask-cors
-pandas
-numpy
-openpyxl
+Flask==3.0.3
+Flask-CORS==5.0.0
+pandas==2.2.2
+numpy==1.26.4
+openpyxl==3.1.5
+requests==2.32.3
+gunicorn==22.0.0 
 vnstock3
-gunicorn
