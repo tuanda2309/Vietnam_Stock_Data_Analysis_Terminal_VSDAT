@@ -1,4 +1,9 @@
+import { useLanguage } from '../../i18n/LanguageContext';
+import LanguageSwitcher from './LanguageSwitcher';
+
 function Header() {
+  const { t } = useLanguage();
+
   return (
     <header className='mb-10 border-b border-slate-800 pb-8 flex flex-col items-center text-center'>
       <div className='relative mb-5 group'>
@@ -11,11 +16,13 @@ function Header() {
       </div>
 
       <h1 className='text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-400 to-blue-500 bg-clip-text text-transparent px-4 max-w-3xl'>
-        Vietnam Stock Data Analysis Terminal (VSDAT)
+        {t('app.title')}
       </h1>
       <p className='text-slate-400 text-sm md:text-base mt-3 max-w-xl font-medium px-4 leading-relaxed'>
-        Hệ thống phân tích kỹ thuật nâng cao và định lượng chuỗi thời gian thị trường chứng khoán Việt Nam
+        {t('app.subtitle')}
       </p>
+
+      <LanguageSwitcher />
     </header>
   );
 }

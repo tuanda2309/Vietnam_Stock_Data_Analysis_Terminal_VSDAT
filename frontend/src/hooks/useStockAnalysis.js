@@ -1,8 +1,11 @@
 import { useState } from 'react';
 
+import { useLanguage } from '../i18n/LanguageContext';
 import { fetchStockAnalysis, exportStockExcel } from '../services/stockApi';
 
 export function useStockAnalysis() {
+  const { t } = useLanguage();
+
   const [symbol, setSymbol] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -18,7 +21,7 @@ export function useStockAnalysis() {
 
   const getStock = async () => {
     if (!symbol.trim()) {
-      setError('Vui lòng điền mã cổ phiếu trước khi phân tích!');
+      setError(t('errors.stockRequired'));
       return;
     }
 
@@ -37,7 +40,7 @@ export function useStockAnalysis() {
       if (err.response && err.response.data && err.response.data.error) {
         setError(err.response.data.error);
       } else {
-        setError('Không thể kết nối đến máy chủ API Backend. Vui lòng kiểm tra lại!');
+        setError(t('errors.connectBackend'));
       }
     } finally {
       setLoading(false);
@@ -46,11 +49,11 @@ export function useStockAnalysis() {
 
   const exportExcel = async () => {
     if (!symbol.trim()) {
-      setError('Vui lòng điền mã cổ phiếu ở Card truy vấn trước khi xuất dữ liệu!');
+      setError(t('errors.exportStockRequired'));
       return;
     }
     if (!startDate || !endDate) {
-      setError('Vui lòng chọn đầy đủ cả Ngày bắt đầu và Ngày kết thúc để xuất file Excel!');
+      setError(t('errors.exportDateRequired'));
       return;
     }
 
@@ -77,12 +80,12 @@ export function useStockAnalysis() {
         const textBlob = await err.response.data.text();
         try {
           const parsedError = JSON.parse(textBlob);
-          setError(parsedError.error || 'Lỗi trích xuất tệp báo cáo từ hệ thống.');
+          setError(parsedError.error || t('errors.exportDefault'));
         } catch {
-          setError('Hệ thống gặp lỗi trong quá trình cấu hình biên soạn tệp Excel.');
+          setError(t('errors.exportConfig'));
         }
       } else {
-        setError('Kết nối mạng gián đoạn. Không thể gửi yêu cầu xuất file báo cáo!');
+        setError(t('errors.exportNetwork'));
       }
     } finally {
       setExporting(false);

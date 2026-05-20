@@ -1,13 +1,17 @@
 import { Activity, LineChart as ChartIcon, Loader2 } from 'lucide-react';
 
+import { useLanguage } from '../../i18n/LanguageContext';
+
 function SearchPanel({ symbol, handleSymbolChange, getStock, loading }) {
+  const { t } = useLanguage();
+
   return (
     <div className='lg:col-span-5 bg-[#131A35] p-5 md:p-6 rounded-xl shadow-xl border border-slate-800 flex flex-col justify-center hover:border-emerald-500/30 transition-all duration-300'>
       <div className='space-y-4 w-full'>
         <div className='flex items-center gap-2 border-b border-slate-800 pb-2.5'>
           <ChartIcon className='h-4 w-4 text-emerald-400' />
           <label className='block text-xs font-bold uppercase text-emerald-400 tracking-wider'>
-            Truy vấn phân tích kỹ thuật
+            {t('search.title')}
           </label>
         </div>
 
@@ -15,7 +19,7 @@ function SearchPanel({ symbol, handleSymbolChange, getStock, loading }) {
           <div className='relative sm:col-span-2'>
             <input
               type='text'
-              placeholder='NHẬP MÃ CỔ PHIẾU'
+              placeholder={t('search.placeholder')}
               value={symbol}
               onChange={handleSymbolChange}
               onKeyDown={(e) => e.key === 'Enter' && !loading && getStock()}
@@ -29,7 +33,7 @@ function SearchPanel({ symbol, handleSymbolChange, getStock, loading }) {
             className='bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-800 disabled:text-slate-500 p-3 rounded-lg text-white font-semibold transition-all flex items-center gap-2 shadow-md w-full justify-center active:scale-95 text-sm h-full whitespace-nowrap'
           >
             {loading ? <Loader2 className='h-4 w-4 animate-spin' /> : <Activity className='h-4 w-4' />}
-            Phân tích
+            {t('search.analyze')}
           </button>
         </div>
       </div>

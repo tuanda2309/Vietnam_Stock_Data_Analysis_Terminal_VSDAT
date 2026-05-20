@@ -21,6 +21,7 @@ import RsiChart from './components/charts/RsiChart';
 import MacdChart from './components/charts/MacdChart';
 import { ACTION_STYLES } from './constants/actionStyles';
 import { useStockAnalysis } from './hooks/useStockAnalysis';
+import { useLanguage } from './i18n/LanguageContext';
 
 function App() {
   const {
@@ -37,6 +38,8 @@ function App() {
     setStartDate,
     setEndDate,
   } = useStockAnalysis();
+
+  const { t } = useLanguage();
 
   const technical = stockData?.technical || {};
   const levels = stockData?.levels || {};
@@ -60,7 +63,7 @@ function App() {
   const riskRewardWeak = riskRewardRatio !== null && riskRewardRatio !== undefined && Number(riskRewardRatio) < 1.5;
 
   return (
-    <div className='min-h-screen bg-[#0A0F24] text-slate-100 p-4 md:p-10 font-sans antialiased'>
+    <div className='notranslate min-h-screen bg-[#0A0F24] text-slate-100 p-4 md:p-10 font-sans antialiased' translate='no'>
       <div className='max-w-7xl mx-auto'>
         <Header />
 
@@ -112,17 +115,17 @@ function App() {
 
               <div className='lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-5'>
                 <ChecklistCard
-                  title='Lý do tích cực'
+                  title={t('checklist.positiveReasons')}
                   icon={<ListChecks className='h-4 w-4 text-emerald-400' />}
                   items={reasons}
-                  emptyText='Chưa có lý do tích cực rõ ràng.'
+                  emptyText={t('checklist.noPositiveReasons')}
                   type='positive'
                 />
                 <ChecklistCard
-                  title='Cảnh báo'
+                  title={t('checklist.warnings')}
                   icon={<AlertTriangle className='h-4 w-4 text-amber-400' />}
                   items={warnings}
-                  emptyText='Chưa có cảnh báo.'
+                  emptyText={t('checklist.noWarnings')}
                   type='warning'
                 />
               </div>
