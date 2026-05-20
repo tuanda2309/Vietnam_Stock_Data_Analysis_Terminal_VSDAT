@@ -105,7 +105,8 @@ computes rolling technical boundaries (MA, RSI, Bollinger)
 
 | 1. Main Landing Query Interface | 2. Time-Series Analysis Dashboard |
 | :---: | :---: |
-| <img src="assets/screenshots/home.png" width="100%" alt="VSDAT Home Interface"/> | <img src="assets/screenshots/dashboard.png" width="100%" alt="VSDAT Quantitative Analysis Dashboard"/> |
+| <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/07defeb9-a194-4e39-8978-65ba8af11b10" />
+" width="100%" alt="VSDAT Home Interface"/> | <img src="assets/screenshots/dashboard.png" width="100%" alt="VSDAT Quantitative Analysis Dashboard"/> |
 | **Title:** Stock Query & Excel Export Interface<br>*Data Analyst Context:* This screen represents the data extraction and reporting specification layer. Users define parameters for time-series parsing and reporting boundaries. | **Title:** Technical Analysis Dashboard<br>*Data Analyst Context:* Demonstrates analytical UI design, operational KPI metrics cards, and multi-axis time-series visualization for operational decision-making. |
 | **3. Relative Strength Indicator Chart** | **4. Generated Programmatic Excel Report** |
 | <img src="assets/screenshots/rsi-chart.png" width="100%" alt="VSDAT RSI Indicator Chart"/> | <img src="assets/screenshots/excel-export.png" width="100%" alt="VSDAT Generated Excel Sheet"/> |
