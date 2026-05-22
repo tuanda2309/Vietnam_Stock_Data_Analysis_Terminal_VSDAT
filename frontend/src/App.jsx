@@ -54,7 +54,9 @@ function App() {
     ? 'text-emerald-400'
     : stockData?.status === 'down'
       ? 'text-rose-400'
-      : 'text-amber-400';
+      : stockData?.status === 'unchanged'
+        ? 'text-amber-400'
+        : 'text-slate-400';
 
   const actionStyle = ACTION_STYLES[signal?.action] || ACTION_STYLES.DEFAULT;
   const entryZone = riskManagement?.entryZone || {};

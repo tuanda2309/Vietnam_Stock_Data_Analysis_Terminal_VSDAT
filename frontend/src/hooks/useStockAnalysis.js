@@ -3,6 +3,59 @@ import { useState } from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { fetchStockAnalysis, exportStockExcel } from '../services/stockApi';
 
+const toNumberOrNull = (value) => {
+  if (value === null || value === undefined || value === '') return null;
+  const numberValue = Number(value);
+  return Number.isFinite(numberValue) ? numberValue : null;
+};
+
+const getStatusFromChange = (priceChange) => {
+  if (priceChange === null || priceChange === undefined) return 'unknown';
+  if (priceChange > 0) return 'up';
+  if (priceChange < 0) return 'down';
+  return 'unchanged';
+};
+
+const getColorFromStatus = (status) => {
+  if (status === 'up') return 'green';
+  if (status === 'down') return 'red';
+  if (status === 'unchanged') return 'yellow';
+  return 'gray';
+};
+
+const normalizeStockResponse = (data) => {
+  const currentPrice = toNumberOrNull(data.currentPrice ?? data.current_price ?? data.close);
+  const previousClose = toNumberOrNull(
+    data.previousClose ?? data.previous_close ?? data.referencePrice ?? data.reference_price
+  );
+
+  let priceChange = toNumberOrNull(data.priceChange ?? data.price_change ?? data.change);
+  if (priceChange === null && currentPrice !== null && previousClose !== null) {
+    priceChange = currentPrice - previousClose;
+  }
+
+  let percentChange = toNumberOrNull(data.percentChange ?? data.changePercent ?? data.price_change_percent);
+  if (percentChange === null && priceChange !== null && previousClose) {
+    percentChange = (priceChange / previousClose) * 100;
+  }
+
+  const status = data.status || getStatusFromChange(priceChange);
+  const color = data.color || getColorFromStatus(status);
+
+  return {
+    ...data,
+    currentPrice,
+    previousClose,
+    referencePrice: previousClose,
+    priceChange,
+    percentChange,
+    change: priceChange,
+    changePercent: percentChange,
+    status,
+    color,
+  };
+};
+
 export function useStockAnalysis() {
   const { t } = useLanguage();
 
@@ -31,10 +84,12 @@ export function useStockAnalysis() {
 
     try {
       const res = await fetchStockAnalysis(symbol.trim());
+      const normalizedData = normalizeStockResponse(res.data);
       console.log('=== DEBUG DỮ LIỆU NHẬN TỪ BACKEND ===');
-      console.log(res.data);
+      console.log(normalizedData);
+      console.log('API response gốc:', res.data);
       console.log('======================================');
-      setStockData(res.data);
+      setStockData(normalizedData);
     } catch (err) {
       console.error(err);
       if (err.response && err.response.data && err.response.data.error) {

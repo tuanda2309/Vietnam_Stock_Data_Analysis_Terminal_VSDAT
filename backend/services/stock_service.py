@@ -1,6 +1,11 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import numpy as np
+
+try:
+    from zoneinfo import ZoneInfo
+except ImportError:  # Python < 3.9 fallback, gần như không xảy ra với project này
+    ZoneInfo = None
 
 try:
     from vnstock3 import Vnstock
@@ -20,6 +25,45 @@ from services.analysis_service import analyze_signal, build_suggested_order
 # API LẤY DỮ LIỆU VÀ PHÂN TÍCH CHỨNG KHOÁN
 # ==========================================================
 
+try:
+    VN_TZ = ZoneInfo("Asia/Ho_Chi_Minh") if ZoneInfo else timezone(timedelta(hours=7))
+except Exception:
+    # Một số máy Windows thiếu tzdata, dùng UTC+7 cố định để local vẫn chạy được.
+    VN_TZ = timezone(timedelta(hours=7))
+
+
+def get_previous_weekday(day):
+    """Lùi về ngày làm việc gần nhất, bỏ qua Thứ 7 / Chủ nhật."""
+    day = day - timedelta(days=1)
+    while day.weekday() >= 5:  # 5 = Saturday, 6 = Sunday
+        day = day - timedelta(days=1)
+    return day
+
+
+def get_expected_vietnam_trading_session_date(now_vn):
+    """
+    Xác định phiên giao dịch gần nhất theo giờ Việt Nam.
+
+    Lý do cần hàm này:
+    - Render thường chạy theo UTC, còn máy local ở Việt Nam là UTC+7.
+    - Sau 00:00 ở Việt Nam, phiên mới thực tế chưa mở cửa, nên phiên gần nhất vẫn là ngày giao dịch hôm trước.
+    - Nếu chỉ so sánh `df.iloc[-1]['time'].date() == datetime.now().date()` thì local rất dễ hiểu nhầm
+      dữ liệu ngày hôm trước là dữ liệu cũ và tính priceChange = 0.
+    """
+    session_day = now_vn.date()
+
+    # Cuối tuần: phiên gần nhất là Thứ 6.
+    while session_day.weekday() >= 5:
+        session_day = session_day - timedelta(days=1)
+
+    # Trước giờ mở cửa, phiên gần nhất vẫn là ngày làm việc trước đó.
+    # HOSE/HNX/UPCoM mở cửa khoảng 09:00, nên dùng mốc 09:00 để tránh lỗi sau nửa đêm.
+    if now_vn.weekday() < 5 and now_vn.hour < 9:
+        session_day = get_previous_weekday(now_vn.date())
+
+    return session_day
+
+
 def get_stock_analysis_data(symbol):
     try:
         if not symbol or symbol.strip() == "":
@@ -28,7 +72,7 @@ def get_stock_analysis_data(symbol):
         symbol_upper = symbol.strip().upper()
         stock_api = Vnstock().stock(symbol=symbol_upper, source="VCI")
 
-        current_time = datetime.now()
+        current_time = datetime.now(VN_TZ)
         start_date = (current_time - timedelta(days=365 * 2)).strftime("%Y-%m-%d")
         end_date = current_time.strftime("%Y-%m-%d")
 
@@ -53,34 +97,52 @@ def get_stock_analysis_data(symbol):
             pass
 
         last_row_date = df.iloc[-1]["time"].date()
-        today_date = current_time.date()
+        expected_session_date = get_expected_vietnam_trading_session_date(current_time)
+        latest_history_close = safe_float(df.iloc[-1]["close"])
+        pricing_mode = "unknown"
 
-        if last_row_date == today_date and len(df) >= 2:
+        if last_row_date == expected_session_date and len(df) >= 2:
+            # History đã có dòng của phiên giao dịch gần nhất.
+            # Vì vậy giá tham chiếu phải là close của dòng trước đó, KHÔNG phải close của dòng mới nhất.
             previous_close = safe_float(df.iloc[-2]["close"])
             if realtime_price is None:
-                realtime_price = safe_float(df.iloc[-1]["close"])
+                realtime_price = latest_history_close
+                pricing_mode = "history_current_session_vs_previous_session"
             else:
                 # Cập nhật close hiện tại để chỉ báo gần realtime hơn.
                 df.loc[df.index[-1], "close"] = realtime_price
                 df.loc[df.index[-1], "high"] = max(safe_float(df.iloc[-1]["high"], realtime_price), realtime_price)
                 df.loc[df.index[-1], "low"] = min(safe_float(df.iloc[-1]["low"], realtime_price), realtime_price)
+                pricing_mode = "intraday_over_history_current_session_vs_previous_session"
         elif has_intraday:
-            previous_close = safe_float(df.iloc[-1]["close"])
-            # Không append dòng giả để tránh làm sai OHLCV; dùng giá realtime cho phân tích hiện tại.
+            # Trong phiên mới nhưng history chưa có dòng hôm nay.
+            # Khi đó dòng cuối history chính là giá đóng cửa phiên trước, dùng làm reference/previousClose.
+            previous_close = latest_history_close
+            pricing_mode = "intraday_vs_latest_history_close"
         else:
-            previous_close = safe_float(df.iloc[-1]["close"])
-            realtime_price = previous_close
+            # Không có intraday thì vẫn nên hiển thị biến động của phiên gần nhất:
+            # latest close - previous session close. Tránh fallback currentPrice = previousClose làm priceChange = 0 giả.
+            previous_close = safe_float(df.iloc[-2]["close"]) if len(df) >= 2 else None
+            realtime_price = latest_history_close
+            pricing_mode = "latest_history_close_vs_previous_session"
 
         if previous_close is None or previous_close == 0 or realtime_price is None:
             return {"error": f"Không đủ dữ liệu giá để phân tích mã {symbol_upper}"}, 442
 
-        # Thêm chỉ báo sau khi đã cập nhật close nếu có dữ liệu intraday cùng ngày.
+        # Thêm chỉ báo sau khi đã cập nhật close nếu có dữ liệu intraday cùng phiên.
         df = add_technical_indicators(df)
         latest = df.iloc[-1]
 
         current_price = safe_float(realtime_price)
-        price_change = current_price - previous_close
-        percent_change = (price_change / previous_close) * 100 if previous_close else 0
+        display_current_price = round_price_vn(current_price)
+        display_previous_close = round_price_vn(previous_close)
+
+        if display_current_price is None or display_previous_close is None or display_previous_close == 0:
+            return {"error": f"Không đủ dữ liệu giá để phân tích mã {symbol_upper}"}, 442
+
+        # Tính biến động từ giá đã chuẩn hóa/hiển thị để UI không lệch số.
+        price_change = display_current_price - display_previous_close
+        percent_change = (price_change / display_previous_close) * 100
 
         if price_change > 0:
             status, color = "up", "green"
@@ -137,10 +199,10 @@ def get_stock_analysis_data(symbol):
         response = {
             "symbol": symbol_upper,
 
-            # Giữ field cũ để frontend cũ không lỗi
-            "currentPrice": round_price_vn(current_price),
-            "referencePrice": round_price_vn(previous_close),
-            "previousClose": round_price_vn(previous_close),
+            # Chuẩn camelCase cho frontend hiện tại.
+            "currentPrice": display_current_price,
+            "referencePrice": display_previous_close,
+            "previousClose": display_previous_close,
             "priceChange": round_number(price_change, 2),
             "percentChange": round_number(percent_change, 2),
             "status": status,
@@ -149,20 +211,34 @@ def get_stock_analysis_data(symbol):
             "ma20": technical["ma20"],
             "data": chart_data,
 
-            # Bổ sung snake_case nếu frontend/backend khác cần dùng
-            "current_price": round_price_vn(current_price),
-            "reference_price": round_price_vn(previous_close),
-            "previous_close": round_price_vn(previous_close),
+            # Alias camelCase phổ biến để tránh frontend cũ/mới đọc lệch field.
+            "change": round_number(price_change, 2),
+            "changePercent": round_number(percent_change, 2),
+
+            # Bổ sung snake_case nếu frontend/backend khác cần dùng.
+            "current_price": display_current_price,
+            "reference_price": display_previous_close,
+            "previous_close": display_previous_close,
             "price_change": round_number(price_change, 2),
             "price_change_percent": round_number(percent_change, 2),
 
-            # Giá cơ bản phiên mới nhất
+            # Giá cơ bản phiên mới nhất.
             "open": round_price_vn(latest.get("open")),
             "high": round_price_vn(latest.get("high")),
             "low": round_price_vn(latest.get("low")),
             "close": round_price_vn(latest.get("close")),
             "volume": round_number(latest.get("volume"), 0),
             "time": latest_time,
+
+            # Metadata giúp debug khi Render/local khác múi giờ hoặc khác dữ liệu history/intraday.
+            "pricingMeta": {
+                "pricingMode": pricing_mode,
+                "serverTimeVietnam": current_time.strftime("%Y-%m-%d %H:%M:%S %z"),
+                "historyLastDate": str(last_row_date),
+                "expectedSessionDate": str(expected_session_date),
+                "hasIntraday": has_intraday,
+                "latestHistoryClose": round_price_vn(latest_history_close),
+            },
 
             "technical": technical,
             "levels": levels,
@@ -173,6 +249,14 @@ def get_stock_analysis_data(symbol):
             "reasons": signal_result["reasons"],
             "warnings": warnings,
         }
+
+        print(
+            f"[PRICE_DEBUG] {symbol_upper} mode={pricing_mode} "
+            f"current={response['currentPrice']} previousClose={response['previousClose']} "
+            f"change={response['priceChange']} pct={response['percentChange']} "
+            f"historyLastDate={last_row_date} expectedSessionDate={expected_session_date} "
+            f"hasIntraday={has_intraday}"
+        )
 
         return response, 200
 
