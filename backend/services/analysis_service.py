@@ -235,7 +235,7 @@ def analyze_signal(current_price, technical, levels, risk_management, market, df
         action = "WATCH"
 
     text = get_signal_text(action)
-    warnings.append(RISK_WARNING)
+    # warnings.append(RISK_WARNING)
 
     # Loại trùng lặp nhưng giữ thứ tự
     reasons = list(dict.fromkeys(reasons))
