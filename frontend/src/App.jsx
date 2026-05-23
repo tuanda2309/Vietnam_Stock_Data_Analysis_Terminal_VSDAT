@@ -32,6 +32,7 @@ function App() {
     loading,
     exporting,
     error,
+    todayDate,
     handleSymbolChange,
     getStock,
     exportExcel,
@@ -83,6 +84,8 @@ function App() {
             setEndDate={setEndDate}
             exportExcel={exportExcel}
             exporting={exporting}
+            loading={loading}
+            todayDate={todayDate}
           />
         </div>
 

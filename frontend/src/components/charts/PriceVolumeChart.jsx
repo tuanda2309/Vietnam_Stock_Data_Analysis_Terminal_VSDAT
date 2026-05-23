@@ -16,13 +16,22 @@ import { formatCurrency } from '../../utils/formatters';
 
 function PriceVolumeChart({ stockData, levels, riskManagement, takeProfitZone }) {
   const { t } = useLanguage();
+  const chartData = Array.isArray(stockData?.data) ? stockData.data : [];
+
+  if (chartData.length === 0) {
+    return (
+      <div className='bg-[#131A35] p-4 md:p-6 rounded-xl border border-slate-800 shadow-lg text-sm text-slate-400'>
+        Không có dữ liệu biểu đồ để hiển thị.
+      </div>
+    );
+  }
 
   return (
     <div className='bg-[#131A35] p-4 md:p-6 rounded-xl border border-slate-800 shadow-lg'>
       <h3 className='text-base font-bold text-slate-300 mb-4 uppercase tracking-wider'>{t('chart.priceVolumeTitle')}</h3>
       <div className='h-[420px] w-full'>
         <ResponsiveContainer width='100%' height='100%'>
-          <ComposedChart data={stockData.data || []} margin={{ top: 10, right: 5, left: -15, bottom: 0 }}>
+          <ComposedChart data={chartData} margin={{ top: 10, right: 5, left: -15, bottom: 0 }}>
             <CartesianGrid strokeDasharray='3 3' stroke='#1E264A' />
             <XAxis dataKey='time' stroke='#64748B' fontSize={11} tickLine={false} />
             <YAxis

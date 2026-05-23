@@ -4,13 +4,18 @@ import { useLanguage } from '../../i18n/LanguageContext';
 
 function RsiChart({ stockData }) {
   const { t } = useLanguage();
+  const chartData = Array.isArray(stockData?.data) ? stockData.data : [];
+
+  if (chartData.length === 0) {
+    return null;
+  }
 
   return (
     <div className='bg-[#131A35] p-4 md:p-6 rounded-xl border border-slate-800 shadow-lg'>
       <h3 className='text-base font-bold text-slate-300 mb-4 uppercase tracking-wider'>{t('chart.rsiTitle')}</h3>
       <div className='h-[170px] w-full'>
         <ResponsiveContainer width='100%' height='100%'>
-          <LineChart data={stockData.data || []} margin={{ top: 5, right: 5, left: -15, bottom: 0 }}>
+          <LineChart data={chartData} margin={{ top: 5, right: 5, left: -15, bottom: 0 }}>
             <CartesianGrid strokeDasharray='3 3' stroke='#1E264A' />
             <XAxis dataKey='time' stroke='#64748B' fontSize={11} tickLine={false} />
             <YAxis domain={[0, 100]} ticks={[30, 50, 70]} stroke='#64748B' fontSize={11} />

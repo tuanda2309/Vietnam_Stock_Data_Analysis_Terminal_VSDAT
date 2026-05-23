@@ -1,27 +1,41 @@
 services:
-  # 1. Cấu hình Máy chủ API Backend (Flask)
   - type: web
-    name: vsdat-backend
-    env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn app:app"
+    name: vsdat-backend-1
+    runtime: python
     rootDir: backend
     plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn --workers 2 --threads 4 --timeout 60 app:app"
+    healthCheckPath: /health
     envVars:
+      - key: PYTHON_VERSION
+        value: "3.10.12"
       - key: FLASK_ENV
         value: production
+      - key: FRONTEND_URL
+        value: https://vsdat-frontend.onrender.com
+      - key: CORS_EXTRA_ORIGINS
+        value: ""
+      - key: STOCK_CACHE_TTL_SECONDS
+        value: "60"
+      - key: RATELIMIT_DEFAULT
+        value: "120 per minute"
+      - key: RATELIMIT_DAILY
+        value: "1000 per day"
+      - key: LOG_LEVEL
+        value: INFO
 
-  # 2. Cấu hình Trang Web Frontend (React Vite)
   - type: web
     name: vsdat-frontend
-    env: static
-    buildCommand: "npm install && npm run build"
-    publishDir: dist
+    runtime: static
     rootDir: frontend
     plan: free
+    buildCommand: "npm install && npm run build"
+    staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        fromService:
-          type: web
-          name: vsdat-backend
-          property: exthost
+        value: https://vsdat-backend-1.onrender.com
+    routes:
+      - type: rewrite
+        source: "/*"
+        destination: /index.html

@@ -2,8 +2,9 @@ import { Download, FileSpreadsheet, Loader2 } from 'lucide-react';
 
 import { useLanguage } from '../../i18n/LanguageContext';
 
-function ExportPanel({ startDate, endDate, setStartDate, setEndDate, exportExcel, exporting }) {
+function ExportPanel({ startDate, endDate, setStartDate, setEndDate, exportExcel, exporting, loading, todayDate }) {
   const { t } = useLanguage();
+  const disabled = exporting || loading;
 
   return (
     <div className='lg:col-span-7 bg-[#131A35] p-5 md:p-6 rounded-xl shadow-xl border border-slate-800 flex flex-col justify-center hover:border-amber-500/30 transition-all duration-300'>
@@ -21,8 +22,10 @@ function ExportPanel({ startDate, endDate, setStartDate, setEndDate, exportExcel
             <input
               type='date'
               value={startDate}
+              max={todayDate}
+              disabled={disabled}
               onChange={(e) => setStartDate(e.target.value)}
-              className='p-3 pt-3.5 rounded-lg text-white bg-[#1E264A] border border-slate-700 w-full focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all text-sm font-medium'
+              className='p-3 pt-3.5 rounded-lg text-white bg-[#1E264A] border border-slate-700 w-full focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all text-sm font-medium disabled:opacity-60'
             />
           </div>
 
@@ -31,14 +34,16 @@ function ExportPanel({ startDate, endDate, setStartDate, setEndDate, exportExcel
             <input
               type='date'
               value={endDate}
+              max={todayDate}
+              disabled={disabled}
               onChange={(e) => setEndDate(e.target.value)}
-              className='p-3 pt-3.5 rounded-lg text-white bg-[#1E264A] border border-slate-700 w-full focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all text-sm font-medium'
+              className='p-3 pt-3.5 rounded-lg text-white bg-[#1E264A] border border-slate-700 w-full focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all text-sm font-medium disabled:opacity-60'
             />
           </div>
 
           <button
             onClick={exportExcel}
-            disabled={exporting}
+            disabled={disabled}
             className='bg-amber-600 hover:bg-amber-500 disabled:bg-slate-800 disabled:text-slate-500 p-3 rounded-lg text-slate-950 font-bold transition-all flex items-center gap-2 shadow-md w-full justify-center whitespace-nowrap active:scale-95 text-sm h-full'
           >
             {exporting ? <Loader2 className='h-4 w-4 animate-spin text-slate-950' /> : <Download className='h-4 w-4 text-slate-950' />}
