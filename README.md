@@ -794,8 +794,6 @@ git clone https://github.com/tuanda2309/Vietnam_Stock_Data_Analysis_Terminal_VSD
 cd Vietnam_Stock_Data_Analysis_Terminal_VSDAT
 ```
 
-> TODO: Replace `TODO-repository-name` with the actual GitHub repository name.
-
 ---
 
 ### 2. Run the Backend
