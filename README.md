@@ -1,51 +1,103 @@
 # Vietnam Stock Data Analysis Terminal (VSDAT)
 
-A full-stack web application for analyzing Vietnamese stock market data, displaying technical indicators, visualizing historical price movements, and exporting OHLCV data to Excel for data analysis purposes.
+<p align="center">
+  <strong>A full-stack web application for Vietnamese stock data analysis, technical indicators, chart visualization, and Excel export.</strong>
+</p>
 
-> **Disclaimer:** This project is for educational and data analysis purposes only. It is not financial advice.
+<p align="center">
+  <a href="https://vsdat-frontend.onrender.com"><strong>🚀 Live Demo</strong></a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Frontend-React%20%2F%20Vite-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React Vite" />
+  <img src="https://img.shields.io/badge/Backend-Flask-000000?style=for-the-badge&logo=flask&logoColor=white" alt="Flask" />
+  <img src="https://img.shields.io/badge/Python-3.10.12-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10.12" />
+  <img src="https://img.shields.io/badge/Deploy-Render-46E3B7?style=for-the-badge&logo=render&logoColor=black" alt="Render" />
+</p>
+
+<p align="center">
+  🌐 Language: <a href="#english">English</a> | <a href="#tiếng-việt">Tiếng Việt</a>
+</p>
 
 ---
 
-## Project Overview
+## English
 
-**Vietnam Stock Data Analysis Terminal (VSDAT)** is a web-based stock data analysis application designed for Vietnamese stock market data. The application allows users to enter a stock symbol, retrieve price data, view current price information, analyze price movement, inspect technical indicators, and export historical data to Excel.
+### Project Title
 
-This project was built as a portfolio project to demonstrate skills in:
+**Vietnam Stock Data Analysis Terminal (VSDAT)**
 
-- Full-stack web development
-- REST API development
-- Data processing with Python
-- Financial data visualization
+### Live Demo
+
+[🚀 Live Demo](https://vsdat-frontend.onrender.com)
+
+Frontend URL:
+
+```text
+https://vsdat-frontend.onrender.com
+```
+
+Backend URL:
+
+```text
+https://vsdat-backend-1.onrender.com
+```
+
+---
+
+### Language Selection
+
+🌐 Language: [English](#english) | [Tiếng Việt](#tiếng-việt)
+
+---
+
+### Project Overview
+
+**Vietnam Stock Data Analysis Terminal (VSDAT)** is a full-stack web application for analyzing Vietnamese stock market data. It allows users to search a Vietnamese stock symbol, retrieve price data, view price movement, inspect technical indicators, display analysis dashboards, and export historical OHLCV data to Excel for further data analysis.
+
+The project is designed as a portfolio project that demonstrates:
+
+- Full-stack web development with React/Vite and Flask
+- REST API design
+- Data processing with Pandas and NumPy
 - Technical indicator calculation
+- Financial data visualization
 - Excel report generation
-- Production deployment on Render
+- Basic production deployment on Render
 
-VSDAT is not designed to provide investment recommendations. All insights and indicators are for learning, research, and data analysis practice only.
+> VSDAT is not an investment advisory tool. All charts, indicators, signals, and exported data are intended for educational and data analysis purposes only.
 
 ---
 
-## Key Features
+### Key Features
 
 - Search Vietnamese stock symbols
-- Display current stock price
+- Display current price information
 - Show price change and percentage change
 - Identify stock movement status: up, down, or unchanged
 - Technical analysis dashboard
-- RSI indicator for momentum analysis
-- Moving averages such as MA20, MA50, MA100, and MA200
-- MACD indicator for trend analysis
-- Bollinger Bands for volatility analysis
-- Historical price chart
-- OHLCV data processing
-- Excel export for historical stock data
-- Loading and error handling states
-- Input validation for stock symbols and export dates
-- Backend API health check endpoint
-- Production deployment on Render
+- Price and volume chart
+- RSI chart
+- MACD chart
+- Moving averages: MA20, MA50, MA100, MA200
+- RSI indicator
+- MACD indicator and signal line
+- Bollinger Bands calculation in backend
+- Support and resistance reference levels
+- VNINDEX market context if data is available
+- Reference-only signal scoring and warning messages
+- Reference-only risk management card
+- Excel export for historical OHLCV data
+- Loading and error states
+- Frontend symbol/date validation
+- Backend input validation
+- Backend rate limiting
+- Backend response caching
+- Production deployment configuration with Render
 
 ---
 
-## Screenshots
+### Screenshots
 
 | Main Query Interface | Technical Analysis Dashboard |
 | :---: | :---: |
@@ -59,290 +111,231 @@ VSDAT is not designed to provide investment recommendations. All insights and in
 
 ---
 
-## Tech Stack
+### Tech Stack
 
-### Frontend
+#### Frontend
 
 - React
 - Vite
 - Tailwind CSS
 - Axios
+- Recharts
+- Lucide React
 - JavaScript
 
-### Backend
+#### Backend
 
 - Python 3.10.12
 - Flask
 - Flask-CORS
-- Gunicorn
 - Flask-Limiter
+- Gunicorn
 
-### Data Processing
+#### Data Processing
 
 - Pandas
 - NumPy
-- vnstock / Vietnamese stock data API
+- vnstock / vnstock3 Vietnamese stock data source
 
-### Excel Export
+#### Excel Export
 
 - openpyxl
-- BytesIO for in-memory file generation
+- BytesIO for in-memory Excel file generation
 
-### Deployment
+#### Deployment
 
 - Render
 
 ---
 
-## System Architecture
+### Project Structure
 
-```txt
-User Browser
-    |
-    |  React/Vite Frontend
-    |  https://vsdat-frontend.onrender.com
-    |
-    |  Axios HTTP Requests
-    v
-Flask Backend API
-    |
-    |  Stock data fetching and processing
-    |  Technical indicator calculation
-    |  Excel report generation
-    |
-    v
-Vietnamese Stock Data Source
-    |
-    v
-Processed JSON Response / Excel File
-```
+The following structure is based on the uploaded project ZIP.
 
-The frontend communicates with the backend through REST API endpoints. The backend retrieves stock data, processes it using Pandas and NumPy, calculates indicators, and returns structured JSON data to the frontend.
-
----
-
-## Folder Structure
-
-```txt
+```text
 VSDAT/
 ├── backend/
-│   ├── app.py
-│   ├── requirements.txt
 │   ├── routes/
+│   │   ├── __init__.py
+│   │   ├── export_routes.py
+│   │   └── stock_routes.py
 │   ├── services/
+│   │   ├── __init__.py
+│   │   ├── analysis_service.py
+│   │   ├── export_service.py
+│   │   ├── market_service.py
+│   │   └── stock_service.py
 │   ├── utils/
-│   └── config.py
+│   │   ├── __init__.py
+│   │   ├── dataframe_utils.py
+│   │   ├── helpers.py
+│   │   ├── indicators.py
+│   │   ├── json_utils.py
+│   │   ├── risk.py
+│   │   ├── simple_cache.py
+│   │   ├── support_resistance.py
+│   │   └── validators.py
+│   ├── .env.example
+│   ├── app.py
+│   ├── config.py
+│   ├── constants.py
+│   ├── extensions.py
+│   └── requirements.txt
 │
 ├── frontend/
-│   ├── package.json
-│   ├── vite.config.js
+│   ├── public/
+│   │   ├── cat-logo.png
+│   │   ├── favicon.svg
+│   │   └── icons.svg
 │   ├── src/
-│   │   ├── App.jsx
-│   │   ├── main.jsx
+│   │   ├── assets/
+│   │   │   ├── hero.png
+│   │   │   ├── react.svg
+│   │   │   └── vite.svg
 │   │   ├── components/
+│   │   │   ├── cards/
+│   │   │   │   ├── ChecklistCard.jsx
+│   │   │   │   ├── InfoRow.jsx
+│   │   │   │   ├── LevelsCard.jsx
+│   │   │   │   ├── Ma20Card.jsx
+│   │   │   │   ├── MarketCard.jsx
+│   │   │   │   ├── MiniMetric.jsx
+│   │   │   │   ├── PriceCard.jsx
+│   │   │   │   ├── RiskManagementCard.jsx
+│   │   │   │   ├── RsiCard.jsx
+│   │   │   │   ├── SectionCard.jsx
+│   │   │   │   ├── SignalCard.jsx
+│   │   │   │   ├── SuggestedOrderCard.jsx
+│   │   │   │   └── TechnicalMetricsCard.jsx
+│   │   │   ├── charts/
+│   │   │   │   ├── MacdChart.jsx
+│   │   │   │   ├── PriceVolumeChart.jsx
+│   │   │   │   └── RsiChart.jsx
+│   │   │   ├── controls/
+│   │   │   │   ├── ExportPanel.jsx
+│   │   │   │   └── SearchPanel.jsx
+│   │   │   └── layout/
+│   │   │       ├── ErrorAlert.jsx
+│   │   │       ├── ErrorBoundary.jsx
+│   │   │       ├── Header.jsx
+│   │   │       ├── LanguageSwitcher.jsx
+│   │   │       ├── LoadingState.jsx
+│   │   │       └── RiskWarning.jsx
+│   │   ├── config/
+│   │   │   └── api.js
+│   │   ├── constants/
+│   │   │   └── actionStyles.js
 │   │   ├── hooks/
+│   │   │   └── useStockAnalysis.js
+│   │   ├── i18n/
+│   │   │   ├── backendTextTranslations.js
+│   │   │   ├── LanguageContext.jsx
+│   │   │   └── translations.js
 │   │   ├── services/
-│   │   └── config/
-│   └── .env.example
+│   │   │   └── stockApi.js
+│   │   ├── utils/
+│   │   │   └── formatters.js
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── index.css
+│   │   └── main.jsx
+│   ├── .env.example
+│   ├── .gitignore
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── README.md
+│   ├── tailwind.config.js
+│   └── vite.config.js
 │
-├── render.yaml
 ├── .gitignore
-└── README.md
+├── README.md
+└── render.yaml
 ```
+
+The uploaded ZIP also contains local/generated folders such as `.git/`, `frontend/node_modules/`, and `backend/__pycache__/`. These should not be committed to a clean public GitHub repository.
 
 ---
 
-## Installation and Setup
+### Backend Overview
 
-### Prerequisites
+The backend is a Flask API located in the `backend/` folder.
 
-Make sure you have the following installed:
+Important backend files:
 
-- Python 3.10.12
-- Node.js
-- npm
-- Git
+| File | Purpose |
+|---|---|
+| `backend/app.py` | Flask app factory, CORS setup, health check, error handlers, security headers |
+| `backend/extensions.py` | Shared Flask extensions such as rate limiter |
+| `backend/constants.py` | Common constants such as data source and risk warning |
+| `backend/config.py` | Developer/config values loaded from environment variables |
+| `backend/routes/stock_routes.py` | Stock analysis API route |
+| `backend/routes/export_routes.py` | Excel export API route |
+| `backend/services/stock_service.py` | Main stock data fetching and analysis service |
+| `backend/services/export_service.py` | Excel report generation service |
+| `backend/services/analysis_service.py` | Reference-only signal scoring and suggested order logic |
+| `backend/services/market_service.py` | VNINDEX market context analysis |
+| `backend/utils/indicators.py` | RSI, MACD, Bollinger Bands, moving averages |
+| `backend/utils/dataframe_utils.py` | OHLCV DataFrame cleaning and normalization |
+| `backend/utils/validators.py` | Symbol and date validation |
+| `backend/utils/simple_cache.py` | Simple in-memory response cache |
+| `backend/utils/json_utils.py` | JSON-safe conversion for NumPy/Pandas values |
+| `backend/requirements.txt` | Python dependencies |
 
----
+Backend production-related features:
 
-## Environment Variables
-
-### Frontend
-
-Create a `.env` file inside the `frontend/` directory:
-
-```env
-VITE_API_URL=https://vsdat-backend-1.onrender.com
-```
-
-For local development:
-
-```env
-VITE_API_URL=http://127.0.0.1:5000
-```
-
-### Backend
-
-Environment variables for production:
-
-```env
-FRONTEND_URL=https://vsdat-frontend.onrender.com
-FLASK_ENV=production
-PYTHON_VERSION=3.10.12
-```
-
-Optional backend variables:
-
-```env
-CORS_EXTRA_ORIGINS=
-STOCK_CACHE_TTL_SECONDS=60
-RATELIMIT_DEFAULT=120 per minute
-RATELIMIT_DAILY=1000 per day
-```
-
-Do not commit real `.env` files to GitHub.
+- CORS restricted by environment variables
+- `debug=False` when running directly
+- Gunicorn start command in `render.yaml`
+- Rate limiting for API endpoints
+- Health check endpoint
+- Safe error handling without exposing raw stack traces to users
 
 ---
 
-## Running Locally
+### Frontend Overview
 
-### Backend Setup
+The frontend is a React/Vite application located in the `frontend/` folder.
 
-```bash
-cd backend
-python -m venv venv
-```
+Important frontend files:
 
-Activate virtual environment on Windows:
+| File | Purpose |
+|---|---|
+| `frontend/src/App.jsx` | Main application layout and dashboard composition |
+| `frontend/src/main.jsx` | React entry point |
+| `frontend/src/config/api.js` | API base URL configuration using `VITE_API_URL` |
+| `frontend/src/services/stockApi.js` | Axios API functions |
+| `frontend/src/hooks/useStockAnalysis.js` | Main state management hook for search, export, loading, and errors |
+| `frontend/src/components/controls/SearchPanel.jsx` | Stock symbol search form |
+| `frontend/src/components/controls/ExportPanel.jsx` | Excel export controls |
+| `frontend/src/components/cards/PriceCard.jsx` | Current price and price change display |
+| `frontend/src/components/cards/TechnicalMetricsCard.jsx` | Technical indicator summary |
+| `frontend/src/components/charts/PriceVolumeChart.jsx` | Price and volume chart |
+| `frontend/src/components/charts/RsiChart.jsx` | RSI chart |
+| `frontend/src/components/charts/MacdChart.jsx` | MACD chart |
+| `frontend/src/components/layout/RiskWarning.jsx` | Disclaimer/risk warning UI |
+| `frontend/src/i18n/LanguageContext.jsx` | Language state provider |
+| `frontend/src/i18n/translations.js` | Frontend UI translations |
+| `frontend/package.json` | Frontend dependencies and scripts |
+| `frontend/vite.config.js` | Vite configuration |
+| `frontend/tailwind.config.js` | Tailwind CSS configuration |
 
-```bash
-venv\Scripts\activate
-```
+Frontend features include:
 
-Activate virtual environment on macOS/Linux:
-
-```bash
-source venv/bin/activate
-```
-
-Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-Run Flask backend:
-
-```bash
-python app.py
-```
-
-The backend should run at:
-
-```txt
-http://127.0.0.1:5000
-```
-
-Test backend health check:
-
-```bash
-curl http://127.0.0.1:5000/health
-```
+- Vietnamese/English language support
+- Loading and error UI states
+- Symbol validation
+- Date validation for Excel export
+- Responsive dashboard layout
+- Chart rendering with Recharts
 
 ---
 
-### Frontend Setup
+### API Endpoints
 
-```bash
-cd frontend
-npm install
-```
-
-Create `.env` from `.env.example`:
-
-```bash
-cp .env.example .env
-```
-
-For Windows PowerShell:
-
-```powershell
-copy .env.example .env
-```
-
-Run frontend development server:
-
-```bash
-npm run dev
-```
-
-Build frontend for production:
-
-```bash
-npm run build
-```
-
----
-
-## Deployment
-
-### Backend on Render
-
-Create a new Render Web Service for the backend.
-
-Recommended backend settings:
-
-```txt
-Runtime: Python
-Build Command: pip install -r requirements.txt
-Start Command: gunicorn app:app
-Python Version: 3.10.12
-```
-
-Environment variables:
-
-```env
-FRONTEND_URL=https://vsdat-frontend.onrender.com
-FLASK_ENV=production
-PYTHON_VERSION=3.10.12
-```
-
-Backend production URL:
-
-```txt
-https://vsdat-backend-1.onrender.com
-```
-
----
-
-### Frontend on Render
-
-Create a new Render Static Site for the frontend.
-
-Recommended frontend settings:
-
-```txt
-Build Command: npm install && npm run build
-Publish Directory: dist
-```
-
-Environment variable:
-
-```env
-VITE_API_URL=https://vsdat-backend-1.onrender.com
-```
-
-Frontend production URL:
-
-```txt
-https://vsdat-frontend.onrender.com
-```
-
----
-
-## API Endpoints
-
-### Health Check
+#### Health Check
 
 ```http
 GET /health
@@ -352,13 +345,12 @@ Example response:
 
 ```json
 {
-  "status": "ok"
+  "status": "ok",
+  "service": "VSDAT backend"
 }
 ```
 
----
-
-### Get Stock Analysis
+#### Get Stock Analysis
 
 ```http
 GET /stock/<symbol>
@@ -370,7 +362,7 @@ Example:
 GET /stock/VIC
 ```
 
-Example response:
+Example response shape:
 
 ```json
 {
@@ -382,23 +374,29 @@ Example response:
   "percentChange": -3.53,
   "status": "down",
   "color": "red",
-  "rsi": 45.2,
-  "ma20": 220000,
+  "technical": {
+    "rsi14": 45.2,
+    "ma20": 220000,
+    "ma50": 218500,
+    "ma100": 215000,
+    "ma200": 210000,
+    "macd": 120.5,
+    "macdSignal": 95.3,
+    "macdHistogram": 25.2
+  },
   "data": []
 }
 ```
 
-Status and color logic:
+Price status logic:
 
-```txt
+```text
 priceChange > 0  -> status = "up", color = "green"
 priceChange < 0  -> status = "down", color = "red"
-priceChange == 0 -> status = "unchanged", color = "yellow" or "gray"
+priceChange == 0 -> status = "unchanged", color = "yellow"
 ```
 
----
-
-### Export Historical Data to Excel
+#### Export Historical Data to Excel
 
 ```http
 GET /export/<symbol>/<start_date>/<end_date>
@@ -410,19 +408,19 @@ Example:
 GET /export/VIC/2024-01-01/2024-12-31
 ```
 
-The API returns an Excel file containing historical OHLCV data.
-
 Date format:
 
-```txt
+```text
 YYYY-MM-DD
 ```
 
+The endpoint returns an Excel file containing historical OHLCV data.
+
 ---
 
-## Excel Export Feature
+### Excel Export
 
-The Excel export feature allows users to download historical stock data for further analysis.
+The Excel export feature generates an `.xlsx` file in memory using `BytesIO`.
 
 The exported file may include:
 
@@ -433,139 +431,354 @@ The exported file may include:
 - Low price
 - Close price
 - Volume
-- Basic formatting for readability
-- Educational disclaimer
+- Price change
+- Percentage change
+- Basic formatting
+- Educational/data analysis disclaimer
 
-The Excel file is generated in memory using `BytesIO`, which avoids writing temporary files to the server disk.
+Export validation includes:
 
----
-
-## Data Analysis Features
-
-VSDAT processes Vietnamese stock data and provides common data analysis indicators.
-
-Main analysis features include:
-
-- OHLCV data cleaning
-- Missing value handling
-- Date and numeric type normalization
-- Price change calculation
-- Percentage change calculation
-- Moving averages
-- RSI indicator
-- MACD indicator
-- Bollinger Bands
-- Historical chart data preparation
-- Basic reference insights for analysis practice
-
-These indicators are intended to support learning and analytical exploration, not investment decision-making.
+- Valid stock symbol format
+- Valid date format
+- `start_date <= end_date`
+- No future end date
+- Maximum export range and row limit
 
 ---
 
-## Limitations
+### Installation
 
-- Stock data availability depends on the external Vietnamese stock data source.
-- Real-time accuracy may vary depending on the data provider.
-- The application may be affected by API rate limits or temporary provider downtime.
-- Render free tier services may sleep after inactivity.
-- Technical indicators are for reference only.
-- The project does not provide buy, sell, or hold recommendations.
-- Historical performance does not guarantee future results.
+#### Prerequisites
+
+Install the following tools first:
+
+- Python 3.10.12
+- Node.js and npm
+- Git
+
+Clone the repository:
+
+```bash
+git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
+cd YOUR_REPOSITORY
+```
 
 ---
 
-## Disclaimer
+### Environment Variables
 
-This project is for educational and data analysis purposes only. It is not financial advice.
+#### Frontend
 
-The information, charts, indicators, and exported data are provided for learning, research, and portfolio demonstration purposes. Users should not rely on this application as a source of financial, investment, or trading advice.
+Create `frontend/.env`:
+
+```env
+VITE_API_URL=https://vsdat-backend-1.onrender.com
+```
+
+For local development:
+
+```env
+VITE_API_URL=http://127.0.0.1:5000
+```
+
+#### Backend
+
+Create `backend/.env` if you run the backend locally with environment loading, or configure these variables directly on Render:
+
+```env
+FRONTEND_URL=https://vsdat-frontend.onrender.com
+FLASK_ENV=production
+PYTHON_VERSION=3.10.12
+```
+
+Optional backend variables:
+
+```env
+CORS_EXTRA_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+STOCK_CACHE_TTL_SECONDS=60
+RATELIMIT_DEFAULT=120 per minute
+RATELIMIT_DAILY=1000 per day
+LOG_LEVEL=INFO
+DEVELOPER_EMAIL=
+DEVELOPER_GITHUB=https://github.com/tuanda2309
+DEVELOPER_WEB=https://vsdat-frontend.onrender.com
+```
+
+Do not commit real `.env` files to GitHub.
 
 ---
 
-## Future Improvements
+### Running Locally
 
-Possible future improvements:
+#### Backend
 
-- Add user authentication
-- Add watchlist feature
-- Add more advanced chart interactions
-- Add Redis cache for production scalability
-- Add automated testing
-- Add CI/CD pipeline
-- Add more technical indicators
-- Add market overview dashboard
+```bash
+cd backend
+python -m venv venv
+```
+
+Activate the virtual environment on Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+Activate the virtual environment on macOS/Linux:
+
+```bash
+source venv/bin/activate
+```
+
+Install backend dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the backend:
+
+```bash
+python app.py
+```
+
+Backend local URL:
+
+```text
+http://127.0.0.1:5000
+```
+
+Test the health endpoint:
+
+```bash
+curl http://127.0.0.1:5000/health
+```
+
+#### Frontend
+
+```bash
+cd frontend
+npm install
+```
+
+Create `.env` from the example file:
+
+```bash
+cp .env.example .env
+```
+
+On Windows PowerShell:
+
+```powershell
+copy .env.example .env
+```
+
+Run the development server:
+
+```bash
+npm run dev
+```
+
+Build the production frontend:
+
+```bash
+npm run build
+```
+
+Preview the production build:
+
+```bash
+npm run preview
+```
+
+---
+
+### Deployment on Render
+
+This project includes `render.yaml` for Render deployment.
+
+#### Backend on Render
+
+Recommended settings:
+
+```text
+Service Type: Web Service
+Runtime: Python
+Root Directory: backend
+Build Command: pip install -r requirements.txt
+Start Command: gunicorn --workers 2 --threads 4 --timeout 60 app:app
+Health Check Path: /health
+Python Version: 3.10.12
+```
+
+Backend environment variables:
+
+```env
+PYTHON_VERSION=3.10.12
+FLASK_ENV=production
+FRONTEND_URL=https://vsdat-frontend.onrender.com
+CORS_EXTRA_ORIGINS=
+STOCK_CACHE_TTL_SECONDS=60
+RATELIMIT_DEFAULT=120 per minute
+RATELIMIT_DAILY=1000 per day
+LOG_LEVEL=INFO
+```
+
+Backend production URL:
+
+```text
+https://vsdat-backend-1.onrender.com
+```
+
+#### Frontend on Render
+
+Recommended settings:
+
+```text
+Service Type: Static Site
+Root Directory: frontend
+Build Command: npm install && npm run build
+Publish Directory: dist
+```
+
+Frontend environment variable:
+
+```env
+VITE_API_URL=https://vsdat-backend-1.onrender.com
+```
+
+Frontend production URL:
+
+```text
+https://vsdat-frontend.onrender.com
+```
+
+---
+
+### Limitations
+
+- Stock data depends on an external Vietnamese stock data provider.
+- Data may be delayed, incomplete, or temporarily unavailable.
+- Render free tier may sleep after inactivity.
+- In-memory cache is simple and resets when the backend restarts.
+- The project does not guarantee real-time accuracy.
+- Technical indicators are reference-only.
+- Signal, risk, and suggested order cards are for learning/data analysis practice only.
+- This project does not provide financial advice or investment recommendations.
+
+---
+
+### Disclaimer
+
+This project is for educational and data analysis purposes only. It is not financial advice. Stock market data may be delayed, incomplete, or inaccurate. Users should not make investment decisions based only on this application.
+
+---
+
+### Future Improvements
+
+- Add automated tests for backend APIs
+- Add frontend component tests
+- Add CI/CD workflow
+- Add Redis cache for better production scalability
+- Add more market overview features
+- Add watchlist functionality
 - Add comparison between multiple stock symbols
-- Add downloadable PDF reports
-- Improve mobile UI and accessibility
-- Add monitoring and error tracking
+- Add more technical indicators
+- Add PDF export
+- Add user authentication
+- Add better monitoring and error tracking
+- Improve accessibility and mobile experience
+- Add official GitHub Pages or documentation site
 
 ---
 
-## Author
+### Author
 
 **Đoàn Anh Tuấn**
 
 - Email: doananhtuan77qn@gmail.com
-- GitHub: [Your GitHub Profile](https://github.com/tuanda2309)
+- GitHub: [Your GitHub Profile](https://github.com/YOUR_USERNAME)
 
 ---
 
 <br />
 
-# Vietnam Stock Data Analysis Terminal (VSDAT) - Tiếng Việt
+## Tiếng Việt
 
-Ứng dụng web full-stack dùng để phân tích dữ liệu chứng khoán Việt Nam, hiển thị chỉ báo kỹ thuật, trực quan hóa biến động giá lịch sử và xuất dữ liệu OHLCV ra file Excel phục vụ mục đích phân tích dữ liệu.
-
-> **Lưu ý rủi ro:** Dự án chỉ phục vụ mục đích học tập và phân tích dữ liệu, không phải khuyến nghị đầu tư.
-
----
-
-## Tên dự án
+### Tên dự án
 
 **Vietnam Stock Data Analysis Terminal (VSDAT)**
 
+### Link Demo
+
+[🚀 Live Demo](https://vsdat-frontend.onrender.com)
+
+Frontend URL:
+
+```text
+https://vsdat-frontend.onrender.com
+```
+
+Backend URL:
+
+```text
+https://vsdat-backend-1.onrender.com
+```
+
 ---
 
-## Tổng quan dự án
+### Chọn ngôn ngữ
 
-**VSDAT** là ứng dụng web phân tích dữ liệu chứng khoán Việt Nam. Ứng dụng cho phép người dùng nhập mã cổ phiếu, lấy dữ liệu giá, xem giá hiện tại, trạng thái tăng/giảm, các chỉ báo kỹ thuật, biểu đồ phân tích và xuất dữ liệu lịch sử ra file Excel.
+🌐 Ngôn ngữ: [English](#english) | [Tiếng Việt](#tiếng-việt)
+
+---
+
+### Tổng quan dự án
+
+**Vietnam Stock Data Analysis Terminal (VSDAT)** là ứng dụng web full-stack dùng để phân tích dữ liệu chứng khoán Việt Nam. Ứng dụng cho phép người dùng nhập mã cổ phiếu, lấy dữ liệu giá, xem giá hiện tại, trạng thái tăng/giảm, biểu đồ giá, chỉ báo kỹ thuật, dashboard phân tích và xuất dữ liệu lịch sử OHLCV ra file Excel.
 
 Dự án được xây dựng nhằm thể hiện các kỹ năng:
 
-- Phát triển web full-stack
-- Xây dựng REST API với Flask
-- Xử lý dữ liệu bằng Python
-- Trực quan hóa dữ liệu tài chính
+- Xây dựng ứng dụng full-stack với React/Vite và Flask
+- Thiết kế REST API
+- Xử lý dữ liệu bằng Pandas và NumPy
 - Tính toán chỉ báo kỹ thuật
-- Xuất báo cáo Excel
-- Deploy ứng dụng production basic trên Render
+- Trực quan hóa dữ liệu tài chính
+- Tạo báo cáo Excel
+- Deploy ứng dụng ở mức production basic trên Render
 
-VSDAT không phải là công cụ đưa ra khuyến nghị đầu tư. Các chỉ báo và nhận xét trong ứng dụng chỉ phục vụ học tập, nghiên cứu và thực hành phân tích dữ liệu.
+> VSDAT không phải là công cụ khuyến nghị đầu tư. Tất cả biểu đồ, chỉ báo, tín hiệu và dữ liệu xuất ra chỉ phục vụ mục đích học tập và phân tích dữ liệu.
 
 ---
 
-## Tính năng chính
+### Tính năng chính
 
 - Tra cứu mã cổ phiếu Việt Nam
-- Hiển thị giá hiện tại
+- Hiển thị thông tin giá hiện tại
 - Hiển thị mức tăng/giảm và phần trăm thay đổi
 - Xác định trạng thái cổ phiếu: tăng, giảm hoặc không đổi
 - Dashboard phân tích kỹ thuật
-- Chỉ báo RSI để phân tích động lượng
-- Đường trung bình động như MA20, MA50, MA100 và MA200
-- Chỉ báo MACD để phân tích xu hướng
-- Bollinger Bands để phân tích biến động giá
-- Biểu đồ giá lịch sử
-- Xử lý dữ liệu OHLCV
-- Xuất dữ liệu lịch sử ra Excel
+- Biểu đồ giá và khối lượng
+- Biểu đồ RSI
+- Biểu đồ MACD
+- Đường trung bình MA20, MA50, MA100, MA200
+- Chỉ báo RSI
+- Chỉ báo MACD và đường signal
+- Tính toán Bollinger Bands ở backend
+- Mức hỗ trợ và kháng cự tham khảo
+- Bối cảnh thị trường VNINDEX nếu có dữ liệu
+- Chấm điểm tín hiệu và cảnh báo chỉ mang tính tham khảo
+- Thẻ quản trị rủi ro chỉ phục vụ học tập/phân tích
+- Xuất dữ liệu lịch sử OHLCV ra Excel
 - Trạng thái loading và error rõ ràng
-- Validate mã cổ phiếu và ngày xuất dữ liệu
-- API kiểm tra trạng thái backend
-- Deploy production trên Render
+- Validate mã cổ phiếu và ngày xuất dữ liệu ở frontend
+- Validate input ở backend
+- Rate limit cơ bản ở backend
+- Cache response đơn giản
+- Cấu hình deploy production trên Render
 
 ---
 
-## Hình ảnh giao diện
+### Hình ảnh giao diện
 
 | Giao diện tra cứu chính | Dashboard phân tích kỹ thuật |
 | :---: | :---: |
@@ -579,117 +792,365 @@ VSDAT không phải là công cụ đưa ra khuyến nghị đầu tư. Các ch�
 
 ---
 
-## Công nghệ sử dụng
+### Công nghệ sử dụng
 
-### Frontend
+#### Frontend
 
 - React
 - Vite
 - Tailwind CSS
 - Axios
+- Recharts
+- Lucide React
 - JavaScript
 
-### Backend
+#### Backend
 
 - Python 3.10.12
 - Flask
 - Flask-CORS
-- Gunicorn
 - Flask-Limiter
+- Gunicorn
 
-### Xử lý dữ liệu
+#### Xử lý dữ liệu
 
 - Pandas
 - NumPy
-- vnstock / API dữ liệu chứng khoán Việt Nam
+- vnstock / vnstock3 làm nguồn dữ liệu chứng khoán Việt Nam
 
-### Xuất Excel
+#### Xuất Excel
 
 - openpyxl
-- BytesIO để tạo file trong bộ nhớ
+- BytesIO để tạo file Excel trong bộ nhớ
 
-### Deploy
+#### Deploy
 
 - Render
 
 ---
 
-## Kiến trúc hệ thống
+### Cấu trúc dự án
 
-```txt
-Trình duyệt người dùng
-    |
-    |  React/Vite Frontend
-    |  https://vsdat-frontend.onrender.com
-    |
-    |  Gửi request bằng Axios
-    v
-Flask Backend API
-    |
-    |  Lấy và xử lý dữ liệu chứng khoán
-    |  Tính toán chỉ báo kỹ thuật
-    |  Tạo file Excel
-    |
-    v
-Nguồn dữ liệu chứng khoán Việt Nam
-    |
-    v
-JSON Response / File Excel
-```
+Cấu trúc dưới đây dựa trên file ZIP project đã gửi.
 
-Frontend giao tiếp với backend thông qua REST API. Backend lấy dữ liệu chứng khoán, xử lý bằng Pandas và NumPy, tính toán các chỉ báo kỹ thuật, sau đó trả dữ liệu dạng JSON cho frontend hoặc file Excel cho người dùng tải về.
-
----
-
-## Cấu trúc thư mục
-
-```txt
+```text
 VSDAT/
 ├── backend/
-│   ├── app.py
-│   ├── requirements.txt
 │   ├── routes/
+│   │   ├── __init__.py
+│   │   ├── export_routes.py
+│   │   └── stock_routes.py
 │   ├── services/
+│   │   ├── __init__.py
+│   │   ├── analysis_service.py
+│   │   ├── export_service.py
+│   │   ├── market_service.py
+│   │   └── stock_service.py
 │   ├── utils/
-│   └── config.py
+│   │   ├── __init__.py
+│   │   ├── dataframe_utils.py
+│   │   ├── helpers.py
+│   │   ├── indicators.py
+│   │   ├── json_utils.py
+│   │   ├── risk.py
+│   │   ├── simple_cache.py
+│   │   ├── support_resistance.py
+│   │   └── validators.py
+│   ├── .env.example
+│   ├── app.py
+│   ├── config.py
+│   ├── constants.py
+│   ├── extensions.py
+│   └── requirements.txt
 │
 ├── frontend/
-│   ├── package.json
-│   ├── vite.config.js
+│   ├── public/
+│   │   ├── cat-logo.png
+│   │   ├── favicon.svg
+│   │   └── icons.svg
 │   ├── src/
-│   │   ├── App.jsx
-│   │   ├── main.jsx
+│   │   ├── assets/
+│   │   │   ├── hero.png
+│   │   │   ├── react.svg
+│   │   │   └── vite.svg
 │   │   ├── components/
+│   │   │   ├── cards/
+│   │   │   │   ├── ChecklistCard.jsx
+│   │   │   │   ├── InfoRow.jsx
+│   │   │   │   ├── LevelsCard.jsx
+│   │   │   │   ├── Ma20Card.jsx
+│   │   │   │   ├── MarketCard.jsx
+│   │   │   │   ├── MiniMetric.jsx
+│   │   │   │   ├── PriceCard.jsx
+│   │   │   │   ├── RiskManagementCard.jsx
+│   │   │   │   ├── RsiCard.jsx
+│   │   │   │   ├── SectionCard.jsx
+│   │   │   │   ├── SignalCard.jsx
+│   │   │   │   ├── SuggestedOrderCard.jsx
+│   │   │   │   └── TechnicalMetricsCard.jsx
+│   │   │   ├── charts/
+│   │   │   │   ├── MacdChart.jsx
+│   │   │   │   ├── PriceVolumeChart.jsx
+│   │   │   │   └── RsiChart.jsx
+│   │   │   ├── controls/
+│   │   │   │   ├── ExportPanel.jsx
+│   │   │   │   └── SearchPanel.jsx
+│   │   │   └── layout/
+│   │   │       ├── ErrorAlert.jsx
+│   │   │       ├── ErrorBoundary.jsx
+│   │   │       ├── Header.jsx
+│   │   │       ├── LanguageSwitcher.jsx
+│   │   │       ├── LoadingState.jsx
+│   │   │       └── RiskWarning.jsx
+│   │   ├── config/
+│   │   │   └── api.js
+│   │   ├── constants/
+│   │   │   └── actionStyles.js
 │   │   ├── hooks/
+│   │   │   └── useStockAnalysis.js
+│   │   ├── i18n/
+│   │   │   ├── backendTextTranslations.js
+│   │   │   ├── LanguageContext.jsx
+│   │   │   └── translations.js
 │   │   ├── services/
-│   │   └── config/
-│   └── .env.example
+│   │   │   └── stockApi.js
+│   │   ├── utils/
+│   │   │   └── formatters.js
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── index.css
+│   │   └── main.jsx
+│   ├── .env.example
+│   ├── .gitignore
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── README.md
+│   ├── tailwind.config.js
+│   └── vite.config.js
 │
-├── render.yaml
 ├── .gitignore
-└── README.md
+├── README.md
+└── render.yaml
+```
+
+File ZIP hiện tại cũng có các thư mục local/generated như `.git/`, `frontend/node_modules/`, và `backend/__pycache__/`. Các thư mục này không nên commit lên GitHub public.
+
+---
+
+### Tổng quan Backend
+
+Backend là Flask API nằm trong thư mục `backend/`.
+
+Các file backend quan trọng:
+
+| File | Vai trò |
+|---|---|
+| `backend/app.py` | Khởi tạo Flask app, cấu hình CORS, health check, xử lý lỗi, security headers |
+| `backend/extensions.py` | Chứa extension dùng chung như rate limiter |
+| `backend/constants.py` | Chứa hằng số dùng chung như nguồn dữ liệu và cảnh báo rủi ro |
+| `backend/config.py` | Cấu hình/developer values lấy từ biến môi trường |
+| `backend/routes/stock_routes.py` | Route API phân tích cổ phiếu |
+| `backend/routes/export_routes.py` | Route API xuất file Excel |
+| `backend/services/stock_service.py` | Service chính để lấy và phân tích dữ liệu cổ phiếu |
+| `backend/services/export_service.py` | Service tạo báo cáo Excel |
+| `backend/services/analysis_service.py` | Logic chấm điểm tín hiệu tham khảo |
+| `backend/services/market_service.py` | Phân tích bối cảnh thị trường VNINDEX |
+| `backend/utils/indicators.py` | Tính RSI, MACD, Bollinger Bands, MA |
+| `backend/utils/dataframe_utils.py` | Làm sạch và chuẩn hóa DataFrame OHLCV |
+| `backend/utils/validators.py` | Validate mã cổ phiếu và ngày |
+| `backend/utils/simple_cache.py` | Cache response đơn giản trong bộ nhớ |
+| `backend/utils/json_utils.py` | Chuyển đổi NumPy/Pandas values về JSON-safe |
+| `backend/requirements.txt` | Danh sách thư viện Python |
+
+Backend có các phần phục vụ production basic:
+
+- CORS cấu hình qua biến môi trường
+- Không bật debug trong production
+- Start command bằng Gunicorn trong `render.yaml`
+- Rate limit cho API endpoints
+- Endpoint kiểm tra trạng thái `/health`
+- Xử lý lỗi an toàn, không trả stack trace thô cho người dùng
+
+---
+
+### Tổng quan Frontend
+
+Frontend là ứng dụng React/Vite nằm trong thư mục `frontend/`.
+
+Các file frontend quan trọng:
+
+| File | Vai trò |
+|---|---|
+| `frontend/src/App.jsx` | Layout chính và ghép các phần dashboard |
+| `frontend/src/main.jsx` | Entry point của React |
+| `frontend/src/config/api.js` | Cấu hình API base URL bằng `VITE_API_URL` |
+| `frontend/src/services/stockApi.js` | Các hàm gọi API bằng Axios |
+| `frontend/src/hooks/useStockAnalysis.js` | Hook quản lý state tìm kiếm, xuất Excel, loading và lỗi |
+| `frontend/src/components/controls/SearchPanel.jsx` | Form nhập mã cổ phiếu |
+| `frontend/src/components/controls/ExportPanel.jsx` | Form xuất Excel |
+| `frontend/src/components/cards/PriceCard.jsx` | Hiển thị giá hiện tại và tăng/giảm |
+| `frontend/src/components/cards/TechnicalMetricsCard.jsx` | Hiển thị chỉ báo kỹ thuật |
+| `frontend/src/components/charts/PriceVolumeChart.jsx` | Biểu đồ giá và khối lượng |
+| `frontend/src/components/charts/RsiChart.jsx` | Biểu đồ RSI |
+| `frontend/src/components/charts/MacdChart.jsx` | Biểu đồ MACD |
+| `frontend/src/components/layout/RiskWarning.jsx` | Cảnh báo rủi ro trên giao diện |
+| `frontend/src/i18n/LanguageContext.jsx` | Provider quản lý ngôn ngữ |
+| `frontend/src/i18n/translations.js` | Nội dung dịch giao diện |
+| `frontend/package.json` | Dependencies và scripts frontend |
+| `frontend/vite.config.js` | Cấu hình Vite |
+| `frontend/tailwind.config.js` | Cấu hình Tailwind CSS |
+
+Frontend có các tính năng:
+
+- Hỗ trợ giao diện tiếng Anh/tiếng Việt
+- Loading state và error state
+- Validate mã cổ phiếu
+- Validate ngày khi xuất Excel
+- Dashboard responsive
+- Hiển thị biểu đồ bằng Recharts
+
+---
+
+### API endpoints
+
+#### Kiểm tra backend
+
+```http
+GET /health
+```
+
+Ví dụ response:
+
+```json
+{
+  "status": "ok",
+  "service": "VSDAT backend"
+}
+```
+
+#### Lấy dữ liệu phân tích cổ phiếu
+
+```http
+GET /stock/<symbol>
+```
+
+Ví dụ:
+
+```http
+GET /stock/VIC
+```
+
+Ví dụ dạng response:
+
+```json
+{
+  "symbol": "VIC",
+  "currentPrice": 218700,
+  "referencePrice": 226700,
+  "previousClose": 226700,
+  "priceChange": -8000,
+  "percentChange": -3.53,
+  "status": "down",
+  "color": "red",
+  "technical": {
+    "rsi14": 45.2,
+    "ma20": 220000,
+    "ma50": 218500,
+    "ma100": 215000,
+    "ma200": 210000,
+    "macd": 120.5,
+    "macdSignal": 95.3,
+    "macdHistogram": 25.2
+  },
+  "data": []
+}
+```
+
+Logic trạng thái giá:
+
+```text
+priceChange > 0  -> status = "up", color = "green"
+priceChange < 0  -> status = "down", color = "red"
+priceChange == 0 -> status = "unchanged", color = "yellow"
+```
+
+#### Xuất dữ liệu lịch sử ra Excel
+
+```http
+GET /export/<symbol>/<start_date>/<end_date>
+```
+
+Ví dụ:
+
+```http
+GET /export/VIC/2024-01-01/2024-12-31
+```
+
+Định dạng ngày:
+
+```text
+YYYY-MM-DD
+```
+
+API sẽ trả về file Excel chứa dữ liệu OHLCV lịch sử.
+
+---
+
+### Chức năng xuất Excel
+
+Chức năng xuất Excel tạo file `.xlsx` trong bộ nhớ bằng `BytesIO`.
+
+File Excel có thể bao gồm:
+
+- Mã cổ phiếu
+- Ngày giao dịch
+- Giá mở cửa
+- Giá cao nhất
+- Giá thấp nhất
+- Giá đóng cửa
+- Khối lượng giao dịch
+- Mức thay đổi giá
+- Phần trăm thay đổi
+- Định dạng bảng cơ bản
+- Disclaimer phục vụ học tập và phân tích dữ liệu
+
+Validate export bao gồm:
+
+- Mã cổ phiếu hợp lệ
+- Định dạng ngày hợp lệ
+- `start_date <= end_date`
+- Không cho ngày tương lai
+- Giới hạn khoảng ngày và số dòng export
+
+---
+
+### Cài đặt
+
+#### Yêu cầu
+
+Cài đặt trước:
+
+- Python 3.10.12
+- Node.js và npm
+- Git
+
+Clone repository:
+
+```bash
+git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
+cd YOUR_REPOSITORY
 ```
 
 ---
 
-## Cài đặt và chạy project
+### Biến môi trường
 
-### Yêu cầu trước khi chạy
+#### Frontend
 
-Bạn cần cài đặt:
-
-- Python 3.10.12
-- Node.js
-- npm
-- Git
-
----
-
-## Biến môi trường
-
-### Frontend
-
-Tạo file `.env` trong thư mục `frontend/`:
+Tạo file `frontend/.env`:
 
 ```env
 VITE_API_URL=https://vsdat-backend-1.onrender.com
@@ -701,9 +1162,9 @@ Khi chạy local:
 VITE_API_URL=http://127.0.0.1:5000
 ```
 
-### Backend
+#### Backend
 
-Biến môi trường cho production:
+Tạo `backend/.env` nếu bạn chạy local với cơ chế load biến môi trường, hoặc cấu hình trực tiếp trên Render:
 
 ```env
 FRONTEND_URL=https://vsdat-frontend.onrender.com
@@ -714,19 +1175,23 @@ PYTHON_VERSION=3.10.12
 Biến môi trường tùy chọn:
 
 ```env
-CORS_EXTRA_ORIGINS=
+CORS_EXTRA_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
 STOCK_CACHE_TTL_SECONDS=60
 RATELIMIT_DEFAULT=120 per minute
 RATELIMIT_DAILY=1000 per day
+LOG_LEVEL=INFO
+DEVELOPER_EMAIL=
+DEVELOPER_GITHUB=https://github.com/tuanda2309
+DEVELOPER_WEB=https://vsdat-frontend.onrender.com
 ```
 
 Không commit file `.env` thật lên GitHub.
 
 ---
 
-## Chạy local
+### Chạy local
 
-### Chạy Backend
+#### Backend
 
 ```bash
 cd backend
@@ -745,108 +1210,118 @@ Kích hoạt môi trường ảo trên macOS/Linux:
 source venv/bin/activate
 ```
 
-Cài đặt thư viện:
+Cài đặt thư viện backend:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Chạy Flask backend:
+Chạy backend:
 
 ```bash
 python app.py
 ```
 
-Backend sẽ chạy tại:
+Backend local URL:
 
-```txt
+```text
 http://127.0.0.1:5000
 ```
 
-Kiểm tra backend:
+Test endpoint health:
 
 ```bash
 curl http://127.0.0.1:5000/health
 ```
 
----
-
-### Chạy Frontend
+#### Frontend
 
 ```bash
 cd frontend
 npm install
 ```
 
-Tạo file `.env` từ `.env.example`:
+Tạo file `.env` từ file mẫu:
 
 ```bash
 cp .env.example .env
 ```
 
-Với Windows PowerShell:
+Trên Windows PowerShell:
 
 ```powershell
 copy .env.example .env
 ```
 
-Chạy frontend:
+Chạy development server:
 
 ```bash
 npm run dev
 ```
 
-Build frontend:
+Build frontend production:
 
 ```bash
 npm run build
 ```
 
+Preview bản build:
+
+```bash
+npm run preview
+```
+
 ---
 
-## Deploy
+### Deploy trên Render
 
-### Deploy Backend trên Render
+Project có sẵn file `render.yaml` để deploy trên Render.
 
-Tạo Web Service mới trên Render cho backend.
+#### Backend trên Render
 
 Cấu hình đề xuất:
 
-```txt
+```text
+Service Type: Web Service
 Runtime: Python
+Root Directory: backend
 Build Command: pip install -r requirements.txt
-Start Command: gunicorn app:app
+Start Command: gunicorn --workers 2 --threads 4 --timeout 60 app:app
+Health Check Path: /health
 Python Version: 3.10.12
 ```
 
-Biến môi trường:
+Biến môi trường backend:
 
 ```env
-FRONTEND_URL=https://vsdat-frontend.onrender.com
-FLASK_ENV=production
 PYTHON_VERSION=3.10.12
+FLASK_ENV=production
+FRONTEND_URL=https://vsdat-frontend.onrender.com
+CORS_EXTRA_ORIGINS=
+STOCK_CACHE_TTL_SECONDS=60
+RATELIMIT_DEFAULT=120 per minute
+RATELIMIT_DAILY=1000 per day
+LOG_LEVEL=INFO
 ```
 
 Backend production URL:
 
-```txt
+```text
 https://vsdat-backend-1.onrender.com
 ```
 
----
-
-### Deploy Frontend trên Render
-
-Tạo Static Site mới trên Render cho frontend.
+#### Frontend trên Render
 
 Cấu hình đề xuất:
 
-```txt
+```text
+Service Type: Static Site
+Root Directory: frontend
 Build Command: npm install && npm run build
 Publish Directory: dist
 ```
 
-Biến môi trường:
+Biến môi trường frontend:
 
 ```env
 VITE_API_URL=https://vsdat-backend-1.onrender.com
@@ -854,176 +1329,52 @@ VITE_API_URL=https://vsdat-backend-1.onrender.com
 
 Frontend production URL:
 
-```txt
+```text
 https://vsdat-frontend.onrender.com
 ```
 
 ---
 
-## API endpoints
-
-### Health Check
-
-```http
-GET /health
-```
-
-Ví dụ response:
-
-```json
-{
-  "status": "ok"
-}
-```
-
----
-
-### Lấy dữ liệu phân tích cổ phiếu
-
-```http
-GET /stock/<symbol>
-```
-
-Ví dụ:
-
-```http
-GET /stock/VIC
-```
-
-Ví dụ response:
-
-```json
-{
-  "symbol": "VIC",
-  "currentPrice": 218700,
-  "referencePrice": 226700,
-  "previousClose": 226700,
-  "priceChange": -8000,
-  "percentChange": -3.53,
-  "status": "down",
-  "color": "red",
-  "rsi": 45.2,
-  "ma20": 220000,
-  "data": []
-}
-```
-
-Logic trạng thái và màu:
-
-```txt
-priceChange > 0  -> status = "up", color = "green"
-priceChange < 0  -> status = "down", color = "red"
-priceChange == 0 -> status = "unchanged", color = "yellow" hoặc "gray"
-```
-
----
-
-### Xuất dữ liệu lịch sử ra Excel
-
-```http
-GET /export/<symbol>/<start_date>/<end_date>
-```
-
-Ví dụ:
-
-```http
-GET /export/VIC/2024-01-01/2024-12-31
-```
-
-API sẽ trả về file Excel chứa dữ liệu lịch sử OHLCV.
-
-Định dạng ngày:
-
-```txt
-YYYY-MM-DD
-```
-
----
-
-## Chức năng xuất Excel
-
-Chức năng xuất Excel cho phép người dùng tải dữ liệu lịch sử của cổ phiếu để tiếp tục phân tích.
-
-File Excel có thể bao gồm:
-
-- Mã cổ phiếu
-- Ngày giao dịch
-- Giá mở cửa
-- Giá cao nhất
-- Giá thấp nhất
-- Giá đóng cửa
-- Khối lượng giao dịch
-- Định dạng bảng dễ đọc
-- Disclaimer phục vụ mục đích học tập và phân tích
-
-File Excel được tạo trong bộ nhớ bằng `BytesIO`, giúp tránh việc ghi file tạm lên ổ đĩa server.
-
----
-
-## Tính năng phân tích dữ liệu
-
-VSDAT xử lý dữ liệu chứng khoán Việt Nam và cung cấp các chỉ báo phân tích phổ biến.
-
-Các tính năng phân tích chính gồm:
-
-- Làm sạch dữ liệu OHLCV
-- Xử lý missing value
-- Chuẩn hóa kiểu dữ liệu ngày và số
-- Tính toán thay đổi giá
-- Tính toán phần trăm thay đổi
-- Đường trung bình động
-- Chỉ báo RSI
-- Chỉ báo MACD
-- Bollinger Bands
-- Chuẩn bị dữ liệu cho biểu đồ lịch sử
-- Nhận xét tham khảo phục vụ thực hành phân tích dữ liệu
-
-Các chỉ báo này chỉ hỗ trợ học tập và phân tích tham khảo, không dùng để ra quyết định đầu tư.
-
----
-
-## Hạn chế
+### Hạn chế
 
 - Dữ liệu chứng khoán phụ thuộc vào nguồn dữ liệu bên ngoài.
-- Độ chính xác realtime có thể thay đổi tùy theo nhà cung cấp dữ liệu.
-- Ứng dụng có thể bị ảnh hưởng bởi giới hạn request hoặc lỗi tạm thời từ API dữ liệu.
+- Dữ liệu có thể bị trễ, thiếu hoặc tạm thời không khả dụng.
 - Render free tier có thể sleep sau một thời gian không hoạt động.
+- Cache hiện tại là cache đơn giản trong bộ nhớ và sẽ reset khi backend restart.
+- Project không đảm bảo độ chính xác realtime tuyệt đối.
 - Chỉ báo kỹ thuật chỉ mang tính tham khảo.
-- Dự án không đưa ra khuyến nghị mua, bán hoặc nắm giữ cổ phiếu.
-- Hiệu suất trong quá khứ không đảm bảo kết quả trong tương lai.
+- Các thẻ tín hiệu, quản trị rủi ro và gợi ý lệnh chỉ phục vụ học tập/phân tích dữ liệu.
+- Dự án không đưa ra lời khuyên tài chính hoặc khuyến nghị đầu tư.
 
 ---
 
-## Lưu ý rủi ro
+### Lưu ý rủi ro
 
-Dự án chỉ phục vụ mục đích học tập và phân tích dữ liệu, không phải khuyến nghị đầu tư.
-
-Thông tin, biểu đồ, chỉ báo và dữ liệu xuất ra từ ứng dụng chỉ phục vụ học tập, nghiên cứu và trình bày năng lực cá nhân trong portfolio. Người dùng không nên xem ứng dụng này là nguồn tư vấn tài chính, đầu tư hoặc giao dịch.
+Dự án chỉ phục vụ mục đích học tập và phân tích dữ liệu, không phải khuyến nghị đầu tư. Dữ liệu chứng khoán có thể bị trễ, thiếu hoặc sai lệch. Người dùng không nên đưa ra quyết định đầu tư chỉ dựa trên ứng dụng này.
 
 ---
 
-## Hướng phát triển
+### Hướng phát triển
 
-Một số hướng phát triển trong tương lai:
-
+- Thêm automated tests cho backend API
+- Thêm frontend component tests
+- Thêm CI/CD workflow
+- Thêm Redis cache để tăng khả năng scale production
+- Thêm tính năng tổng quan thị trường
+- Thêm watchlist cổ phiếu
+- Thêm chức năng so sánh nhiều mã cổ phiếu
+- Thêm nhiều chỉ báo kỹ thuật hơn
+- Thêm xuất báo cáo PDF
 - Thêm đăng nhập người dùng
-- Thêm danh sách cổ phiếu theo dõi
-- Cải thiện tương tác biểu đồ
-- Thêm Redis cache cho production
-- Thêm automated testing
-- Thêm CI/CD pipeline
-- Bổ sung nhiều chỉ báo kỹ thuật hơn
-- Thêm dashboard tổng quan thị trường
-- So sánh nhiều mã cổ phiếu
-- Xuất báo cáo PDF
-- Cải thiện giao diện mobile và accessibility
 - Thêm monitoring và error tracking
+- Cải thiện accessibility và trải nghiệm mobile
+- Thêm trang tài liệu hoặc GitHub Pages chính thức
 
 ---
 
-## Tác giả
+### Tác giả
 
 **Đoàn Anh Tuấn**
 
 - Email: doananhtuan77qn@gmail.com
-- GitHub: [Your GitHub Profile](https://github.com/tuanda2309)
+- GitHub: [Tuanda2309](https://github.com/tuanda2309)
