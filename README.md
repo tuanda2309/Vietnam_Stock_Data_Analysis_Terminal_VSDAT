@@ -468,13 +468,15 @@ Stock data is retrieved from the external stock data library and processed on re
 
 ## Screenshots
 
-| Main Interface | Technical Analysis Dashboard |
+| Main Query Interface | Technical Analysis Dashboard |
 | :---: | :---: |
-| TODO: add screenshot | TODO: add screenshot |
+| <img src="https://github.com/user-attachments/assets/07defeb9-a194-4e39-8978-65ba8af11b10" width="100%" alt="VSDAT Home Interface" /> | <img src="https://github.com/user-attachments/assets/0b1b5455-425c-4893-b947-d54d2acbaa49" width="100%" alt="VSDAT Technical Analysis Dashboard" /> |
+| Stock symbol input, language switcher, and Excel export controls | Main dashboard with price summary, technical analysis cards, signals, and charts |
 
-| RSI / MACD Chart | Excel Export Report |
+| RSI Indicator Chart | Generated Excel Report |
 | :---: | :---: |
-| TODO: add screenshot | TODO: add screenshot |
+| <img src="https://github.com/user-attachments/assets/30219a3f-dc33-4bb2-bd7a-56bfcf78d824" width="100%" alt="VSDAT RSI Indicator Chart" /> | <img src="https://github.com/user-attachments/assets/a5f6e01f-8570-42f9-b69f-19b377dc01d8" width="100%" alt="VSDAT Generated Excel Sheet" /> |
+| RSI visualization for momentum analysis | Exported OHLCV Excel report for further analysis |
 
 ---
 
