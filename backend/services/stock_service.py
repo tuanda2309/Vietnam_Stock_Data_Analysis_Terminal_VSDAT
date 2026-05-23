@@ -185,7 +185,7 @@ def get_stock_analysis_data(symbol):
         )
 
         warnings = list(signal_result.get("warnings", []))
-        warnings.append("Nhận xét chỉ phục vụ học tập và phân tích dữ liệu, không phải khuyến nghị đầu tư.")
+        # warnings.append("Nhận xét chỉ phục vụ học tập và phân tích dữ liệu, không phải khuyến nghị đầu tư.")
         if len(df) < 200:
             warnings.append("Dữ liệu chưa đủ 200 phiên nên MA200 chỉ mang tính tham khảo theo dữ liệu hiện có.")
         if market.get("warning"):
