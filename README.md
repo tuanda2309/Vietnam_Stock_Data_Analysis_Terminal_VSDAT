@@ -790,8 +790,8 @@ Install the following tools before running the project locally:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/tuanda2309/TODO-repository-name.git
-cd TODO-repository-name
+git clone https://github.com/tuanda2309/Vietnam_Stock_Data_Analysis_Terminal_VSDAT.git
+cd Vietnam_Stock_Data_Analysis_Terminal_VSDAT
 ```
 
 > TODO: Replace `TODO-repository-name` with the actual GitHub repository name.
