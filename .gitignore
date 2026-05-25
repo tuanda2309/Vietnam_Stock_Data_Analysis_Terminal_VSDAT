@@ -9,6 +9,7 @@ __pycache__/
 *$py.class
 .pytest_cache/
 .coverage
+coverage.xml
 htmlcov/
 .mypy_cache/
 .ruff_cache/
@@ -23,6 +24,11 @@ ENV/
 instance/
 *.log
 logs/
+
+# Local database files
+*.db
+*.sqlite
+*.sqlite3
 
 # Node / Vite
 node_modules/
@@ -41,6 +47,7 @@ pnpm-debug.log*
 *.parquet
 *.tmp
 *.temp
+~$*.xlsx
 
 # OS / IDE
 .DS_Store
