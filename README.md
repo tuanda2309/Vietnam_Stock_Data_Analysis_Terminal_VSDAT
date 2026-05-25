@@ -23,7 +23,7 @@ Dưới đây là một số hình ảnh minh họa giao diện và kết quả 
 
 ### 1. Giao diện tổng quan
 
-![Giao diện tổng quan](img\image.png)
+![Giao diện tổng quan](img/image.png)
 
 ---
 
@@ -31,9 +31,9 @@ Dưới đây là một số hình ảnh minh họa giao diện và kết quả 
 
 | Kết quả phân tích | Chi tiết chỉ số |
 |---|---|
-| ![Kết quả phân tích cổ phiếu 1](img\image-3.png) | ![Kết quả phân tích cổ phiếu 2](img\image-4.png) |
+| ![Kết quả phân tích cổ phiếu 1](img/image-3.png) | ![Kết quả phân tích cổ phiếu 2](img/image-4.png) |
 
-![Kết quả phân tích cổ phiếu 3](img\image-5.png)
+![Kết quả phân tích cổ phiếu 3](img/image-5.png)
 
 ---
 
@@ -41,7 +41,7 @@ Dưới đây là một số hình ảnh minh họa giao diện và kết quả 
 
 | Biểu đồ giá | Chỉ báo kỹ thuật |
 |---|---|
-| ![Biểu đồ giá và chỉ báo kỹ thuật 1](img\image-1.png) | ![Biểu đồ giá và chỉ báo kỹ thuật 2](img\image-2.png) |
+| ![Biểu đồ giá và chỉ báo kỹ thuật 1](img/image-1.png) | ![Biểu đồ giá và chỉ báo kỹ thuật 2](img/image-2.png) |
 
 ---
 
@@ -51,11 +51,11 @@ File Excel được xuất ra dưới dạng báo cáo phân tích gồm nhiều
 
 | Tổng quan Excel | Dashboard |
 |---|---|
-| ![File Excel sau khi export 1](img\image-6.png) | ![File Excel sau khi export 2](img\image-7.png) |
+| ![File Excel sau khi export 1](img/image-6.png) | ![File Excel sau khi export 2](img/image-7.png) |
 
 | Phân tích | Dữ liệu |
 |---|---|
-| ![File Excel sau khi export 3](img\image-8.png) | ![File Excel sau khi export 4](img\image-9.png) |
+| ![File Excel sau khi export 3](img/image-8.png) | ![File Excel sau khi export 4](img/image-9.png) |
 
 ---
 
