@@ -2,6 +2,8 @@
 
 **A Fullstack Data Analytics Portfolio Project for Vietnamese Stock Market Time-Series Analysis, Technical Indicator Automation, Interactive Dashboard Visualization, and Excel Reporting**
 
+README CŨ TÔI LÀM BIẾNG CẬP NHẬT NÓ, SẼ UPDATE SAU
+
 [English](#english) | [Tiếng Việt](#tiếng-việt)
 
 ---
