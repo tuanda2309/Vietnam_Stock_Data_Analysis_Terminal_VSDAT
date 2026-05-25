@@ -657,7 +657,7 @@ Description:
 - Validates date range
 - Prevents future-date export
 - Limits export range to a maximum of 5 years
-- Limits exported rows to a maximum of 1500 rows
+- Limits exported rows to a maximum of 10000 rows
 - Retrieves historical OHLCV data
 - Generates a formatted `.xlsx` file
 - Returns the Excel file as an attachment

@@ -4,7 +4,7 @@ import { useLanguage } from '../i18n/LanguageContext';
 import { exportStockExcel, fetchStockAnalysis } from '../services/stockApi';
 
 const SYMBOL_PATTERN = /^[A-Z0-9]{1,10}$/;
-const MAX_EXPORT_DAYS = 365 * 5;
+const MAX_EXPORT_DAYS = 365 * 10;
 
 const toNumberOrNull = (value) => {
   if (value === null || value === undefined || value === '') return null;
@@ -64,7 +64,7 @@ const validateExportDates = (startDate, endDate) => {
     return 'Không thể xuất dữ liệu cho ngày tương lai.';
   }
   if (getDateDiffDays(startDate, endDate) > MAX_EXPORT_DAYS) {
-    return 'Khoảng ngày xuất Excel quá dài. Vui lòng chọn tối đa 5 năm.';
+    return 'Khoảng ngày xuất Excel quá dài. Vui lòng chọn tối đa 10 năm.';
   }
   return null;
 };

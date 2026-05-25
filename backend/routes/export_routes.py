@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, send_file
 
 from extensions import limiter
-from services.export_service import create_excel_report
+from services.export_service import EXCEL_MIME_TYPE, create_excel_report
 
 
 export_bp = Blueprint("export", __name__)
@@ -19,9 +19,10 @@ def export_excel(symbol, start_date, end_date):
         excel_file,
         download_name=filename,
         as_attachment=True,
-        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        mimetype=EXCEL_MIME_TYPE,
         max_age=0,
     )
     response.headers["Access-Control-Expose-Headers"] = "Content-Disposition"
-    response.headers["Cache-Control"] = "no-store"
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
     return response

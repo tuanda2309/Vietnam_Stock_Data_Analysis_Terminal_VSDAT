@@ -3,8 +3,8 @@ from datetime import datetime, timezone, timedelta
 
 
 SYMBOL_PATTERN = re.compile(r"^[A-Z0-9]{1,10}$")
-MAX_EXPORT_DAYS = 365 * 5
-MAX_EXPORT_ROWS = 1500
+MAX_EXPORT_DAYS = 365 * 10
+MAX_EXPORT_ROWS = 10000
 VN_TZ = timezone(timedelta(hours=7))
 
 
@@ -44,6 +44,6 @@ def validate_date_range(start_date, end_date):
         return None, None, "Hệ thống không hỗ trợ trích xuất dữ liệu ngày tương lai."
 
     if (end_obj - start_obj).days > MAX_EXPORT_DAYS:
-        return None, None, "Khoảng ngày xuất Excel quá dài. Vui lòng chọn tối đa 5 năm."
+        return None, None, "Khoảng ngày xuất Excel quá dài. Vui lòng chọn tối đa 10 năm."
 
     return start_obj, end_obj, None
