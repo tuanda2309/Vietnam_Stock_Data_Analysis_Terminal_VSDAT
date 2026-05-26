@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any, Dict
 from openpyxl.styles import Alignment
+from copy import copy
+from openpyxl.styles import Alignment, Font
 
 import pandas as pd
 
@@ -35,10 +37,55 @@ def _write_executive_summary(ws, metrics: Dict[str, Any]) -> None:
     symbol = metrics["symbol"]
 
     ws["A1"] = f"EXECUTIVE SUMMARY - BÁO CÁO CỔ PHIẾU {symbol}"
-    ws["A2"] = (
-        f"Giai đoạn: {metrics['start_date']} - {metrics['end_date']}  |  "
-        f"Số phiên: {metrics['trading_days']}  |  Ngày hoàn thiện: {metrics['completed_date']}"
+
+    old_a2 = ws["A2"]
+    old_style = copy(old_a2._style)
+    old_font = copy(old_a2.font)
+    old_fill = copy(old_a2.fill)
+    old_border = copy(old_a2.border)
+    old_alignment = copy(old_a2.alignment)
+
+    for merged_range in list(ws.merged_cells.ranges):
+        if merged_range.min_row == 2 and merged_range.max_row == 2:
+            ws.unmerge_cells(str(merged_range))
+
+    for col in range(1, 13):  # A -> L
+        cell = ws.cell(row=2, column=col)
+        cell.value = None
+        cell.hyperlink = None
+        cell._style = copy(old_style)
+        cell.font = copy(old_font)
+        cell.fill = copy(old_fill)
+        cell.border = copy(old_border)
+        cell.alignment = copy(old_alignment)
+
+    ws["A2"] = "Nguồn:"
+    ws["B2"] = "VSDAT"
+    ws["C2"] = (
+        f"|  Giai đoạn: {metrics['start_date']} - {metrics['end_date']}  |  "
+        f"Số phiên: {metrics['trading_days']}  |  "
+        f"Ngày hoàn thiện: {metrics['completed_date']}"
     )
+
+    ws.merge_cells("C2:L2")
+    ws.column_dimensions["B"].width = 5.58
+
+    ws["B2"].hyperlink = "https://vsdat-frontend.onrender.com/"
+    ws["B2"].font = Font(
+        name=old_font.name,
+        size=old_font.sz,
+        bold=old_font.b,
+        italic=old_font.i,
+        color="0563C1",
+        underline="single"
+    )
+
+    ws["A2"].hyperlink = None
+    ws["C2"].hyperlink = None
+
+    ws["A2"].alignment = Alignment(horizontal="right", vertical="center")
+    ws["B2"].alignment = Alignment(horizontal="left", vertical="center")
+    ws["C2"].alignment = Alignment(horizontal="left", vertical="center")
 
     ws["A4"] = "Giá cuối kỳ"
     ws["A5"] = _format_price_text(metrics["end_close"])
@@ -135,7 +182,6 @@ def _write_executive_summary(ws, metrics: Dict[str, Any]) -> None:
     ws["A26"] = "• Nếu giá thủng vùng đáy kỳ hoặc drawdown tiếp tục mở rộng, cần giảm khẩu vị rủi ro và cập nhật lại kịch bản."
     ws["A27"] = "• Khi báo cáo cho sếp, tập trung vào 3 điểm: hiệu suất kỳ, drawdown lớn nhất và điều kiện xác nhận hồi phục bằng thanh khoản."
     ws["A29"] = "Ghi chú: Báo cáo phục vụ mục đích quản trị nội bộ, được tổng hợp từ dữ liệu lịch sử trong kỳ phân tích và không phải là khuyến nghị đầu tư."
-
 
 def _write_dashboard(ws, metrics: Dict[str, Any], monthly: pd.DataFrame, data_rows: int) -> None:
     symbol = metrics["symbol"]
