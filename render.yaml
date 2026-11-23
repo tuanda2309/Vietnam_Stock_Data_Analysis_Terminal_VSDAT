@@ -9,7 +9,13 @@ services:
     healthCheckPath: /health
     envVars:
       - key: PYTHON_VERSION
-        value: "3.10.12"
+        value: "3.11.11"
+      - key: VNSTOCK_SOURCE
+        value: dnse
+      - key: DNSE_API_KEY
+        sync: false
+      - key: DNSE_API_SECRET
+        sync: false
       - key: FLASK_ENV
         value: production
       - key: FRONTEND_URL

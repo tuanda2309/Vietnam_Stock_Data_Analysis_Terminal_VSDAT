@@ -374,19 +374,14 @@ def _write_analysis(ws, metrics: Dict[str, Any], data: pd.DataFrame, monthly: pd
         ws.cell(r_idx, 7).number_format = NUMBER_FORMAT_PRICE
         ws.cell(r_idx, 8).number_format = NUMBER_FORMAT_PRICE
 
-        # if "MonthlySummaryTbl" in ws.tables:
-        # table = ws.tables["MonthlySummaryTbl"]
-        # last_month_row = month_data_start + len(monthly) - 1
-
-        # # Đồng bộ vùng table với số tháng thực tế
-        # table.ref = f"A{monthly_start}:I{last_month_row}"
-
-        # # Đồng bộ tên cột metadata với hàng tiêu đề trên sheet
-        # for table_column, header in zip(table.tableColumns, headers):
-        #     table_column.name = header
-
-        # if table.autoFilter is not None:
-        #     table.autoFilter.ref = table.ref
+    if "MonthlySummaryTbl" in ws.tables:
+        table = ws.tables["MonthlySummaryTbl"]
+        last_month_row = month_data_start + len(monthly) - 1
+        table.ref = f"A{monthly_start}:I{last_month_row}"
+        for table_column, header in zip(table.tableColumns, headers):
+            table_column.name = header
+        if table.autoFilter is not None:
+            table.autoFilter.ref = table.ref
 
     # Top/bottom section: keep exact position when <= 5 months to match template.
     top_section_row = 26 if len(monthly) <= 5 else month_data_start + len(monthly) + 3

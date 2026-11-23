@@ -1,10 +1,8 @@
 from datetime import datetime, timedelta
 
-try:
-    from vnstock3 import Vnstock
-except ImportError:
-    from vnstock import Vnstock
+from vnstock import Market
 
+from constants import SOURCE
 from utils.dataframe_utils import prepare_ohlcv_dataframe
 from utils.helpers import safe_float, round_number
 
@@ -29,8 +27,8 @@ def analyze_vnindex_market():
         start_date = (current_time - timedelta(days=365)).strftime("%Y-%m-%d")
         end_date = current_time.strftime("%Y-%m-%d")
 
-        index_api = Vnstock().stock(symbol="VNINDEX", source="VCI")
-        df_index = index_api.quote.history(start=start_date, end=end_date, interval="1D")
+        index_api = Market(SOURCE).index("VNINDEX")
+        df_index = index_api.ohlcv(start=start_date, end=end_date, interval="1D")
         df_index = prepare_ohlcv_dataframe(df_index, multiply_price_by_1000=False)
 
         if df_index is None or df_index.empty or len(df_index) < 2:

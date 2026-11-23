@@ -10,10 +10,7 @@ try:
 except ImportError:
     ZoneInfo = None
 
-try:
-    from vnstock3 import Vnstock
-except ImportError:
-    from vnstock import Vnstock
+from vnstock import Market
 
 from constants import DEFAULT_HISTORY_DAYS, SOURCE
 from services.analysis_service import analyze_signal, build_suggested_order
@@ -54,13 +51,13 @@ def get_expected_vietnam_trading_session_date(now_vn):
 
 
 def get_stock_api(symbol_upper):
-    return Vnstock().stock(symbol=symbol_upper, source=SOURCE)
+    return Market(SOURCE).equity(symbol_upper)
 
 
 def get_latest_intraday_price(stock_api):
     """Lấy giá intraday mới nhất nếu vnstock hỗ trợ. Lỗi API ngoài không làm backend crash."""
     try:
-        intraday = stock_api.quote.intraday()
+        intraday = stock_api.trades()
         if intraday is None or getattr(intraday, "empty", True) or "price" not in intraday.columns:
             return None, False
 
@@ -106,7 +103,7 @@ def get_stock_analysis_data(symbol):
         end_date = current_time.strftime("%Y-%m-%d")
 
         try:
-            raw_df = stock_api.quote.history(start=start_date, end=end_date, interval="1D")
+            raw_df = stock_api.ohlcv(start=start_date, end=end_date, interval="1D")
         except Exception:
             current_app.logger.exception("Cannot fetch history data for %s", symbol_upper)
             return {"error": "Không lấy được dữ liệu chứng khoán từ nguồn bên ngoài. Vui lòng thử lại sau."}, 500

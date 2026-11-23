@@ -30,7 +30,7 @@ def create_excel_report(symbol: str, start_date: str, end_date: str):
 
         try:
             stock_api = get_stock_api(symbol_upper)
-            raw_df = stock_api.quote.history(start=start_date, end=end_date, interval="1D")
+            raw_df = stock_api.ohlcv(start=start_date, end=end_date, interval="1D")
         except Exception:
             current_app.logger.exception("Không lấy được dữ liệu lịch sử cho mã %s", symbol_upper)
             return (

@@ -119,7 +119,7 @@ File Excel được xuất ra dưới dạng báo cáo phân tích gồm nhiều
 - Pandas
 - NumPy
 - OpenPyXL
-- vnstock3
+- vnstock v6 (official Vnstock package index)
 - Gunicorn
 
 ### Frontend
@@ -681,6 +681,8 @@ Sau khi tăng giới hạn, nên test lại chức năng export Excel với từ
 ## Deploy lên Render
 
 Project có sẵn file `render.yaml` để hỗ trợ deploy lên Render.
+
+Backend lấy dữ liệu qua Vnstock v6 và DNSE. Trong Render, đặt `DNSE_API_KEY` và `DNSE_API_SECRET` trong Environment; không commit hai giá trị này vào repo. `VNSTOCK_SOURCE` mặc định là `dnse`.
 
 ### Backend
 
