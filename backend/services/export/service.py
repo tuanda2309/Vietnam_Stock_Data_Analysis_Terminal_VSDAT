@@ -19,7 +19,9 @@ def _fetch_ohlcv_in_chunks(stock_api, start_obj, end_obj):
     cursor = start_obj.date()
     final_day = end_obj.date()
     frames = []
-    chunk_days = 365
+    # Keep each provider request below roughly 500 trading sessions while
+    # avoiding too many sequential calls for a ten-year export.
+    chunk_days = 730
 
     while cursor <= final_day:
         chunk_end = min(cursor + timedelta(days=chunk_days - 1), final_day)
