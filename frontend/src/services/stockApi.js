@@ -4,7 +4,8 @@ import { API_BASE_URL } from '../config/api';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000,
+  // Render Free may take 50+ seconds to wake the backend after it spins down.
+  timeout: 180000,
 });
 
 export const fetchStockAnalysis = (symbol) => {

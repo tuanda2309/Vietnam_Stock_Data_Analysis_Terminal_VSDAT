@@ -1,3 +1,6 @@
+import logging
+import threading
+import time
 from datetime import datetime, timedelta
 
 from vnstock import Market
@@ -11,9 +14,17 @@ from utils.helpers import safe_float, round_number
 # VNINDEX / THỊ TRƯỜNG CHUNG
 # ==========================================================
 
-def analyze_vnindex_market():
-    """Phân tích nhanh VNINDEX. Nếu vnstock lỗi thì trả UNKNOWN, không làm app crash."""
-    fallback = {
+_LOGGER = logging.getLogger(__name__)
+_VNINDEX_REFRESH_TTL_SECONDS = 15 * 60
+_VNINDEX_LOCK = threading.Lock()
+_VNINDEX_CACHE = None
+_VNINDEX_CACHE_UPDATED_AT = 0.0
+_VNINDEX_NEXT_REFRESH_AT = 0.0
+_VNINDEX_REFRESHING = False
+
+
+def _unknown_market():
+    return {
         "vnindexPrice": None,
         "vnindexChangePercent": None,
         "vnindexMa20": None,
@@ -21,6 +32,10 @@ def analyze_vnindex_market():
         "marketCondition": "UNKNOWN",
         "warning": "Không lấy được dữ liệu thị trường chung",
     }
+
+
+def _fetch_vnindex_market():
+    """Tải và phân tích VNINDEX; chỉ chạy trong thread nền."""
 
     try:
         current_time = datetime.now()
@@ -32,7 +47,7 @@ def analyze_vnindex_market():
         df_index = prepare_ohlcv_dataframe(df_index, multiply_price_by_1000=False)
 
         if df_index is None or df_index.empty or len(df_index) < 2:
-            return fallback
+            return None
 
         df_index["MA20"] = df_index["close"].rolling(window=20, min_periods=1).mean()
         latest = df_index.iloc[-1]
@@ -61,4 +76,55 @@ def analyze_vnindex_market():
             "marketCondition": condition,
         }
     except Exception:
-        return fallback
+        _LOGGER.warning("Cannot fetch VNINDEX market context", exc_info=True)
+        return None
+
+
+def _refresh_vnindex_cache():
+    global _VNINDEX_CACHE, _VNINDEX_CACHE_UPDATED_AT, _VNINDEX_REFRESHING
+
+    try:
+        result = _fetch_vnindex_market()
+        if result is not None:
+            with _VNINDEX_LOCK:
+                _VNINDEX_CACHE = result
+                _VNINDEX_CACHE_UPDATED_AT = time.monotonic()
+    finally:
+        with _VNINDEX_LOCK:
+            _VNINDEX_REFRESHING = False
+
+
+def analyze_vnindex_market():
+    """Trả context thị trường nhanh; việc gọi nguồn VNINDEX được làm nền."""
+    global _VNINDEX_NEXT_REFRESH_AT, _VNINDEX_REFRESHING
+
+    now = time.monotonic()
+    start_refresh = False
+
+    with _VNINDEX_LOCK:
+        if (
+            _VNINDEX_CACHE is not None
+            and now - _VNINDEX_CACHE_UPDATED_AT < _VNINDEX_REFRESH_TTL_SECONDS
+        ):
+            return dict(_VNINDEX_CACHE)
+
+        if not _VNINDEX_REFRESHING and now >= _VNINDEX_NEXT_REFRESH_AT:
+            _VNINDEX_REFRESHING = True
+            _VNINDEX_NEXT_REFRESH_AT = now + _VNINDEX_REFRESH_TTL_SECONDS
+            start_refresh = True
+
+        result = dict(_VNINDEX_CACHE) if _VNINDEX_CACHE is not None else _unknown_market()
+
+    if start_refresh:
+        try:
+            threading.Thread(
+                target=_refresh_vnindex_cache,
+                name="vnindex-refresh",
+                daemon=True,
+            ).start()
+        except RuntimeError:
+            with _VNINDEX_LOCK:
+                _VNINDEX_REFRESHING = False
+            _LOGGER.warning("Could not start VNINDEX background refresh", exc_info=True)
+
+    return result
