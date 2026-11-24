@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Dict
 from openpyxl.styles import Alignment
+from openpyxl.worksheet.filters import AutoFilter
 from copy import copy
 from openpyxl.styles import Alignment, Font
 
@@ -313,11 +314,18 @@ def _write_clean_data(ws, data: pd.DataFrame) -> None:
         ws.cell(row, 18).number_format = NUMBER_FORMAT_RSI
         ws.cell(row, 20).number_format = NUMBER_FORMAT_DECIMAL
 
-    # Update table range. Template table covers A:U only; column V is only for chart labels.
+    # Keep the worksheet table and its filter on the same A:U range. Column V is
+    # reserved for chart labels, so a separate worksheet AutoFilter over A:V
+    # would overlap the table and make Excel repair/remove CleanDataTbl.
     if "CleanDataTbl" in ws.tables:
-        ws.tables["CleanDataTbl"].ref = f"A1:U{last_row}"
+        table = ws.tables["CleanDataTbl"]
+        table.ref = f"A1:U{last_row}"
+        if table.autoFilter is None:
+            table.autoFilter = AutoFilter(ref=table.ref)
+        else:
+            table.autoFilter.ref = table.ref
 
-    ws.auto_filter.ref = f"A1:V{last_row}"
+    ws.auto_filter.ref = None
     try:
         ws.freeze_panes = None  # Match file mẫu v2 exactly.
     except Exception:
