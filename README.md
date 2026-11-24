@@ -842,4 +842,3 @@ Các kết quả phân tích, chỉ báo kỹ thuật, vùng giá tham khảo ho
 Người dùng cần tự nghiên cứu và tự chịu trách nhiệm với mọi quyết định đầu tư của mình.
 
 ## BUG
-"We found a problem with some content in '..._VSDAT....xlsx'. Do you want us to try to recover as much as we can? If you trust the source of this workbook, click Yes."   BUG CHƯA SỬA ĐƯỢC, NHẤN "YES" ĐỂ Excel SẼ TỰ ĐỘNG SỬA LỖI =))
