@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import timedelta
+
 import pandas as pd
 from flask import current_app
 
@@ -10,6 +12,30 @@ from .data_preparation import _prepare_analysis_dataframe
 from .naming import _build_filename
 from .stock_api import get_stock_api
 from .workbook_builder import _build_excel_report_from_template
+
+
+def _fetch_ohlcv_in_chunks(stock_api, start_obj, end_obj):
+    """Fetch long export ranges in bounded, inclusive date windows."""
+    cursor = start_obj.date()
+    final_day = end_obj.date()
+    frames = []
+    chunk_days = 365
+
+    while cursor <= final_day:
+        chunk_end = min(cursor + timedelta(days=chunk_days - 1), final_day)
+        current_app.logger.info("Fetching export OHLCV %s to %s", cursor, chunk_end)
+        frame = stock_api.ohlcv(
+            start=cursor.isoformat(),
+            end=chunk_end.isoformat(),
+            interval="1D",
+        )
+        if frame is not None and not frame.empty:
+            frames.append(frame)
+        cursor = chunk_end + timedelta(days=1)
+
+    if not frames:
+        return pd.DataFrame()
+    return pd.concat(frames, ignore_index=True)
 
 
 def create_excel_report(symbol: str, start_date: str, end_date: str):
@@ -30,9 +56,14 @@ def create_excel_report(symbol: str, start_date: str, end_date: str):
 
         try:
             stock_api = get_stock_api(symbol_upper)
-            raw_df = stock_api.ohlcv(start=start_date, end=end_date, interval="1D")
+            raw_df = _fetch_ohlcv_in_chunks(stock_api, start_obj, end_obj)
         except Exception:
-            current_app.logger.exception("Không lấy được dữ liệu lịch sử cho mã %s", symbol_upper)
+            current_app.logger.exception(
+                "Không lấy được dữ liệu lịch sử cho mã %s trong khoảng %s đến %s",
+                symbol_upper,
+                start_date,
+                end_date,
+            )
             return (
                 None,
                 None,

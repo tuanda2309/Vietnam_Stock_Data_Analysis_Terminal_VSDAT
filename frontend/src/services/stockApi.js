@@ -17,7 +17,8 @@ export const exportStockExcel = (symbol, startDate, endDate) => {
     `/export/${encodeURIComponent(symbol)}/${encodeURIComponent(startDate)}/${encodeURIComponent(endDate)}`,
     {
       responseType: 'blob',
-      timeout: 60000,
+      // Long exports may fetch up to ten years in bounded date chunks.
+      timeout: 240000,
     }
   );
 };
