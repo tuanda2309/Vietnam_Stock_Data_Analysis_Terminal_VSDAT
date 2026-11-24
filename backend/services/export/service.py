@@ -44,8 +44,18 @@ def create_excel_report(symbol: str, start_date: str, end_date: str):
         if df is None or df.empty:
             return None, None, {"error": f"Không có dữ liệu lịch sử để xuất file cho mã {symbol_upper}."}, 404
 
-        df["time"] = pd.to_datetime(df["time"])
-        df = df[(df["time"] >= pd.to_datetime(start_obj)) & (df["time"] <= pd.to_datetime(end_obj))].reset_index(drop=True)
+        df["time"] = pd.to_datetime(df["time"], errors="coerce")
+        # vnstock may return Asia/Ho_Chi_Minh-aware timestamps. Strip the timezone
+        # while keeping the local trading date so it can be filtered against the
+        # user's date-only inputs and written to Excel.
+        if isinstance(df["time"].dtype, pd.DatetimeTZDtype):
+            df["time"] = df["time"].dt.tz_localize(None)
+
+        start_ts = pd.Timestamp(start_obj)
+        end_exclusive = pd.Timestamp(end_obj) + pd.Timedelta(days=1)
+        df = df[
+            (df["time"] >= start_ts) & (df["time"] < end_exclusive)
+        ].reset_index(drop=True)
         if df.empty:
             return None, None, {"error": f"Không có dữ liệu trong khoảng ngày đã chọn cho mã {symbol_upper}."}, 404
 
