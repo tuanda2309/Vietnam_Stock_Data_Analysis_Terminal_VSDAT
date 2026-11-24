@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from vnstock import Market
 
-from constants import SOURCE
-
 
 def get_stock_api(symbol_upper: str):
-    return Market(SOURCE).equity(symbol_upper)
+    # Use Vnstock's configured OHLCV route so exports share the same source
+    # failover as stock analysis instead of pinning every request to DNSE.
+    return Market().equity(symbol_upper)
