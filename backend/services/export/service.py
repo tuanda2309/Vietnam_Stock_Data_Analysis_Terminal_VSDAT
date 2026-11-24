@@ -5,7 +5,6 @@ from datetime import timedelta
 import pandas as pd
 from flask import current_app
 
-from constants import SOURCE
 from utils.dataframe_utils import prepare_ohlcv_dataframe
 from utils.validators import MAX_EXPORT_ROWS, validate_date_range, validate_symbol
 
@@ -33,10 +32,8 @@ def _fetch_ohlcv_in_chunks(stock_api, start_obj, end_obj):
             "end": chunk_end.isoformat(),
             "interval": "1D",
         }
-        # Export must use the configured primary source. Passing source explicitly
-        # bypasses the global fallback route so the workbook cannot silently
-        # switch vendors when DNSE is unavailable.
-        query["source"] = history_source or SOURCE
+        if history_source:
+            query["source"] = history_source
         frame = stock_api.ohlcv(**query)
         reported_source = getattr(frame, "attrs", {}).get("source") if frame is not None else None
         if reported_source:
@@ -88,13 +85,8 @@ def create_excel_report(symbol: str, start_date: str, end_date: str):
             return (
                 None,
                 None,
-                {
-                    "error": (
-                        f"Không lấy được dữ liệu OHLCV từ {SOURCE.upper()}. "
-                        "File chưa được xuất bằng nguồn dự phòng để tránh lệch số liệu."
-                    )
-                },
-                502,
+                {"error": "Không lấy được dữ liệu chứng khoán từ nguồn bên ngoài. Vui lòng thử lại sau."},
+                500,
             )
 
         df = prepare_ohlcv_dataframe(raw_df, multiply_price_by_1000=True)
