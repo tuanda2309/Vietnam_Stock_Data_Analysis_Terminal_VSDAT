@@ -11,9 +11,9 @@ services:
       - key: PYTHON_VERSION
         value: "3.11.11"
       - key: VNSTOCK_SOURCE
-        value: fhsc
+        value: dnse
       - key: VNSTOCK_FALLBACK_SOURCES
-        value: "dnse,ssi"
+        value: "fhsc,ssi"
       - key: FHSC_API_KEY
         sync: false
       - key: FHSC_API_SECRET
