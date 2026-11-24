@@ -10,7 +10,7 @@ try:
 except ImportError:
     ZoneInfo = None
 
-from vnstock import Market
+from vnstock import Market, sources
 
 from constants import DEFAULT_HISTORY_DAYS, SOURCE
 from services.analysis_service import analyze_signal, build_suggested_order
@@ -52,6 +52,35 @@ def get_expected_vietnam_trading_session_date(now_vn):
 
 def get_stock_api(symbol_upper):
     return Market(SOURCE).equity(symbol_upper)
+
+
+def _has_source_credentials(source):
+    credential_keys = {
+        "dnse": ("DNSE_API_KEY", "DNSE_API_SECRET"),
+        "fhsc": ("FHSC_API_KEY",),
+        "ssi": ("SSI_API_KEY", "SSI_API_SECRET"),
+    }
+    keys = credential_keys.get(source)
+    return bool(keys) and all(os.environ.get(key, "").strip() for key in keys)
+
+
+def configure_ohlcv_source_fallbacks():
+    """Set Vnstock's explicit OHLCV route using only configured API sources."""
+    configured_sources = [SOURCE]
+    fallbacks = os.environ.get("VNSTOCK_FALLBACK_SOURCES", "fhsc,ssi")
+
+    for source in fallbacks.split(","):
+        source = source.strip().lower()
+        if source in configured_sources:
+            continue
+        if _has_source_credentials(source):
+            configured_sources.append(source)
+
+    sources.use(*configured_sources, route="market.equity.ohlcv")
+    return tuple(configured_sources)
+
+
+OHLCV_SOURCES = configure_ohlcv_source_fallbacks()
 
 
 def get_latest_intraday_price(stock_api):
@@ -103,10 +132,16 @@ def get_stock_analysis_data(symbol):
         end_date = current_time.strftime("%Y-%m-%d")
 
         try:
-            raw_df = stock_api.ohlcv(start=start_date, end=end_date, interval="1D")
+            # Use an unpinned Market so Vnstock's route can fail over on network errors.
+            raw_df = Market().equity(symbol_upper).ohlcv(
+                start=start_date, end=end_date, interval="1D"
+            )
         except Exception:
             current_app.logger.exception("Cannot fetch history data for %s", symbol_upper)
-            return {"error": "Không lấy được dữ liệu chứng khoán từ nguồn bên ngoài. Vui lòng thử lại sau."}, 500
+            current_app.logger.error(
+                "OHLCV sources configured for %s: %s", symbol_upper, ",".join(OHLCV_SOURCES)
+            )
+            return {"error": "Nguồn dữ liệu chứng khoán tạm thời không phản hồi. Vui lòng thử lại sau."}, 502
 
         df = prepare_ohlcv_dataframe(raw_df, multiply_price_by_1000=True)
 
@@ -229,6 +264,7 @@ def get_stock_analysis_data(symbol):
             "time": latest_time,
             "pricingMeta": {
                 "pricingMode": pricing_mode,
+                "historySource": getattr(raw_df, "attrs", {}).get("source", SOURCE),
                 "serverTimeVietnam": current_time.strftime("%Y-%m-%d %H:%M:%S %z"),
                 "historyLastDate": str(last_row_date),
                 "expectedSessionDate": str(expected_session_date),
