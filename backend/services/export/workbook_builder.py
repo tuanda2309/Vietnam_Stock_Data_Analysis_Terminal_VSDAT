@@ -18,7 +18,11 @@ from .sheet_writers import (
 from .template_loader import _load_template_workbook
 
 
-def _build_excel_report_from_template(symbol_upper: str, data: pd.DataFrame) -> BytesIO:
+def _build_excel_report_from_template(
+    symbol_upper: str,
+    data: pd.DataFrame,
+    history_source: str = "unknown",
+) -> BytesIO:
     wb = _load_template_workbook()
 
     expected_sheets = [
@@ -35,14 +39,15 @@ def _build_excel_report_from_template(symbol_upper: str, data: pd.DataFrame) -> 
         raise ValueError(f"Template thiếu sheet bắt buộc: {', '.join(missing)}")
 
     metrics = _calculate_metrics(symbol_upper, data)
+    metrics["history_source"] = history_source
     monthly = _build_monthly_summary(data)
 
     _write_executive_summary(wb["Executive Summary"], metrics)
     _write_clean_data(wb["Dữ liệu sạch"], data)
     _write_analysis(wb["Phân tích"], metrics, data, monthly)
-    _write_data_issues(wb["Data Issues"], data)
+    _write_data_issues(wb["Data Issues"], data, history_source)
     _write_change_log(wb["Change Log"], metrics)
-    _write_methodology(wb["Phương pháp"])
+    _write_methodology(wb["Phương pháp"], history_source)
     _write_dashboard(wb["Dashboard quản trị"], metrics, monthly, len(data))
     _center_all_report_tables(wb, len(data), len(monthly))
 
@@ -50,8 +55,11 @@ def _build_excel_report_from_template(symbol_upper: str, data: pd.DataFrame) -> 
     wb.properties.title = f"Báo cáo cổ phiếu {symbol_upper}"
     wb.properties.subject = "Stock executive report"
     wb.properties.creator = "Stock Analytics System"
-    wb.properties.keywords = f"{symbol_upper}, stock, report, dashboard"
-    wb.properties.description = "Báo cáo Excel tự động tạo từ template đã duyệt, giữ layout giống bản gửi quản lý."
+    wb.properties.keywords = f"{symbol_upper}, {history_source}, stock, report, dashboard"
+    wb.properties.description = (
+        "Báo cáo Excel dùng OHLCV đã điều chỉnh theo sự kiện quyền từ "
+        f"{history_source}; cùng một nguồn được dùng xuyên suốt lần xuất."
+    )
     _set_workbook_calc_mode(wb)
 
     output = BytesIO()

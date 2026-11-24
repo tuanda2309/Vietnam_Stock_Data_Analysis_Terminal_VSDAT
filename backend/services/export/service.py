@@ -19,6 +19,7 @@ def _fetch_ohlcv_in_chunks(stock_api, start_obj, end_obj):
     cursor = start_obj.date()
     final_day = end_obj.date()
     frames = []
+    history_source = None
     # Keep each provider request below roughly 500 trading sessions while
     # avoiding too many sequential calls for a ten-year export.
     chunk_days = 730
@@ -26,18 +27,33 @@ def _fetch_ohlcv_in_chunks(stock_api, start_obj, end_obj):
     while cursor <= final_day:
         chunk_end = min(cursor + timedelta(days=chunk_days - 1), final_day)
         current_app.logger.info("Fetching export OHLCV %s to %s", cursor, chunk_end)
-        frame = stock_api.ohlcv(
-            start=cursor.isoformat(),
-            end=chunk_end.isoformat(),
-            interval="1D",
-        )
+        query = {
+            "start": cursor.isoformat(),
+            "end": chunk_end.isoformat(),
+            "interval": "1D",
+        }
+        if history_source:
+            query["source"] = history_source
+        frame = stock_api.ohlcv(**query)
+        reported_source = getattr(frame, "attrs", {}).get("source") if frame is not None else None
+        if reported_source:
+            reported_source = str(reported_source).strip().lower()
+            if history_source and reported_source != history_source:
+                raise RuntimeError(
+                    f"Nguồn OHLCV đổi giữa các đoạn: {history_source} -> {reported_source}."
+                )
+            history_source = reported_source
+        elif not history_source and frame is not None and not frame.empty:
+            raise RuntimeError("Nguồn OHLCV không được API trả về; từ chối ghép dữ liệu không rõ nguồn.")
         if frame is not None and not frame.empty:
             frames.append(frame)
         cursor = chunk_end + timedelta(days=1)
 
     if not frames:
         return pd.DataFrame()
-    return pd.concat(frames, ignore_index=True)
+    result = pd.concat(frames, ignore_index=True)
+    result.attrs["source"] = history_source
+    return result
 
 
 def create_excel_report(symbol: str, start_date: str, end_date: str):
@@ -104,7 +120,12 @@ def create_excel_report(symbol: str, start_date: str, end_date: str):
         if data.empty:
             return None, None, {"error": f"Dữ liệu sau chuẩn hóa bị trống cho mã {symbol_upper}."}, 404
 
-        excel_file = _build_excel_report_from_template(symbol_upper, data)
+        history_source = getattr(raw_df, "attrs", {}).get("source", "unknown")
+        excel_file = _build_excel_report_from_template(
+            symbol_upper,
+            data,
+            history_source=history_source,
+        )
         filename = _build_filename(symbol_upper, start_obj, end_obj)
         return excel_file, filename, None, 200
 

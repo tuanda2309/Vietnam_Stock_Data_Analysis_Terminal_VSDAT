@@ -63,7 +63,8 @@ def _write_executive_summary(ws, metrics: Dict[str, Any]) -> None:
     ws["A2"] = "Nguồn:"
     ws["B2"] = "VSDAT"
     ws["C2"] = (
-        f"|  Giai đoạn: {metrics['start_date']} - {metrics['end_date']}  |  "
+        f"|  OHLCV: {metrics.get('history_source', 'unknown').upper()}  |  "
+        f"Giai đoạn: {metrics['start_date']} - {metrics['end_date']}  |  "
         f"Số phiên: {metrics['trading_days']}  |  "
         f"Ngày hoàn thiện: {metrics['completed_date']}"
     )
@@ -447,7 +448,7 @@ def _write_analysis(ws, metrics: Dict[str, Any], data: pd.DataFrame, monthly: pd
             ws.cell(target_row, col).number_format = NUMBER_FORMAT_VOLUME
 
 
-def _write_data_issues(ws, data: pd.DataFrame) -> None:
+def _write_data_issues(ws, data: pd.DataFrame, history_source: str) -> None:
     _clean_sheet_values(ws, 1, max(ws.max_row, 30), 1, 5)
     headers = ["Mức độ", "Vấn đề dữ liệu", "Trạng thái", "Mô tả / tác động", "Hành động"]
     for col_idx, header in enumerate(headers, 1):
@@ -466,10 +467,17 @@ def _write_data_issues(ws, data: pd.DataFrame) -> None:
         ],
         [
             "Thông tin",
-            "Nguồn dữ liệu chưa đối chiếu ngoài workbook",
+            "Nguồn OHLCV thực tế",
+            history_source.upper(),
+            "Một nguồn được khóa xuyên suốt các đoạn của lần export. OHLCV lịch sử đã điều chỉnh theo sự kiện quyền.",
+            "Dùng nguồn này khi so sánh các lần xuất",
+        ],
+        [
+            "Thông tin",
+            "Nguồn dữ liệu chưa đối chiếu độc lập",
             "Cần lưu ý",
-            "Báo cáo được xây dựng dựa trên dữ liệu có sẵn trong file. Nếu dùng cho quyết định đầu tư thực tế, nên đối chiếu thêm nguồn chính thức.",
-            "Ghi chú trong báo cáo",
+            "Workbook ghi nhận nhà cung cấp OHLCV, nhưng chưa tự đối chiếu dữ liệu với sở giao dịch hoặc nguồn độc lập khác.",
+            "Đối chiếu nguồn chính thức nếu cần xác minh",
         ],
         [
             "Đã kiểm tra",
@@ -517,7 +525,7 @@ def _write_change_log(ws, metrics: Dict[str, Any]) -> None:
             _set_value(ws, r_idx, c_idx, value)
 
 
-def _write_methodology(ws) -> None:
+def _write_methodology(ws, history_source: str) -> None:
     _clean_sheet_values(ws, 1, max(ws.max_row, 25), 1, 3)
     rows = [
         ["Mục", "Cách hiểu", "Ghi chú"],
@@ -526,6 +534,7 @@ def _write_methodology(ws) -> None:
         ["MA5/MA10/MA20", "Trung bình động 5/10/20 phiên", "Dùng để đọc xu hướng ngắn/trung hạn."],
         ["RSI14", "Chỉ báo sức mạnh tương đối 14 phiên", "Khoảng 50 thường được xem là trung tính."],
         ["Thanh khoản TB", "Tổng khối lượng / số phiên", "Đơn vị trong báo cáo là triệu cp/phiên."],
+        ["Nguồn OHLCV", history_source.upper(), "Giữ cùng một nguồn trong lần xuất; OHLC đã điều chỉnh theo sự kiện quyền."],
         ["Giới hạn", "Báo cáo dựa trên dữ liệu có sẵn trong workbook.", "Không thay thế thẩm định hoặc nguồn dữ liệu chính thức."],
     ]
     _ensure_template_rows(ws, 1, 1, len(rows), 3)
