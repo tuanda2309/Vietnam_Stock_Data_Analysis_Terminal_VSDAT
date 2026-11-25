@@ -76,7 +76,8 @@ def configure_ohlcv_source_fallbacks():
         if _has_source_credentials(source):
             configured_sources.append(source)
 
-    sources.use(*configured_sources, route="market.equity.ohlcv")
+    for route in ("market.equity.ohlcv", "market.index.ohlcv"):
+        sources.use(*configured_sources, route=route)
     return tuple(configured_sources)
 
 
